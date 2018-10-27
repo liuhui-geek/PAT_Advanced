@@ -1,0 +1,112 @@
+#include<iostream>
+#include<string>
+#include<map>
+#include<algorithm>
+using namespace std;
+void mutisort();
+struct student {                         //学生信息存储与结构体中
+	string id;
+	int c, m, e;
+	int ave;
+	int rankc, rankm, ranke, rankave;    //存储学科排名
+};
+int cmpC(student a, student b) {         //为sort函数编写排序函数，共4个
+	return a.c > b.c;
+}
+int cmpM(student a, student b) {
+	return a.m > b.m;
+}
+int cmpE(student a, student b) {
+	return a.e > b.e;
+}
+int cmpAVE(student a, student b) {
+	return a.ave > b.ave;
+}
+student a[2002];
+int n, m;
+int main() {
+	
+	string s[2002];
+	char flagalp[4] = { 'A','C','M','E' };
+	cin >> n >> m;
+	int sum = 0;
+	for (int i = 0; i < n; i++) {                //输入学生信息
+		cin >> a[i].id;
+		cin >> a[i].c >> a[i].m >> a[i].e;
+		a[i].ave = (a[i].c + a[i].m + a[i].e) / 3;
+	}
+	for (int i = 0; i < m; i++) {
+		cin >> s[i];
+	}
+	mutisort();                                 //排序
+	int flag;
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			int maxrank = a[j].ranke;
+			flag = -1;                           //标志哪个学科为最大排名
+			if (a[j].id == s[i]) {
+				flag = 3;
+				if (maxrank >= a[j].rankm) {
+					maxrank = a[j].rankm;
+					flag = 2;
+				}
+				if(maxrank >= a[j].rankc){
+					maxrank = a[j].rankc;
+					flag = 1;
+				}
+				if (maxrank >= a[j].rankave) {
+					maxrank = a[j].rankave;
+					flag = 0;
+				}
+				cout << maxrank << " " << flagalp[flag] << endl;
+				break;
+			}
+		}
+		if (flag == -1) {
+			cout << "N/A"<<endl;
+		}
+	}
+	return  0;
+}
+void mutisort() {
+	sort(a, a + n, cmpC);                   //先排序后定等级
+	a[0].rankc = 1;
+	for (int i = 1; i < n; i++) {
+		if (a[i].c == a[i - 1].c) {
+			a[i].rankc = a[i - 1].rankc;
+		}
+		else {
+			a[i].rankc = i + 1;
+		}
+	}
+	sort(a, a + n, cmpM);
+	a[0].rankm = 1;
+	for (int i = 1; i < n; i++) {
+		if (a[i].m == a[i - 1].m) {
+			a[i].rankm = a[i - 1].rankm;
+		}
+		else {
+			a[i].rankm = i + 1;
+		}
+	}
+	sort(a, a + n, cmpE);
+	a[0].ranke = 1;
+	for (int i = 1; i < n; i++) {
+		if (a[i].e == a[i - 1].e) {
+			a[i].ranke = a[i - 1].ranke;
+		}
+		else {
+			a[i].ranke = i + 1;
+		}
+	}
+	sort(a, a + n, cmpAVE);
+	a[0].rankave = 1;
+	for (int i = 1; i < n; i++) {
+		if (a[i].ave == a[i - 1].ave) {
+			a[i].rankave = a[i - 1].rankave;
+		}
+		else {
+			a[i].rankave = i + 1;
+		}
+	}
+}

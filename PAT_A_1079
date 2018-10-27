@@ -1,0 +1,57 @@
+#include<iostream>
+#include<vector>
+#include<map>
+#include<cmath>
+#include<stack>
+#include<iomanip>
+using namespace std;
+vector<vector<int>> arc;
+bool visit[100002];
+stack<double> res;
+map<int, int> goods;
+double p = 0.0, r = 0.0;
+double sum = 0;
+void dfs(int root, int level) {
+	if (arc[root].size() == 0) {
+		sum = goods[root] * pow(1 + r, level);
+		res.push(sum);
+		return;
+	}
+	visit[root] = true;;
+	for (int i = 0; i < arc[root].size(); i++) {
+		dfs(arc[root][i], level + 1);
+	}
+}
+
+
+int main() {
+	int n = 0;
+	cin >> n;
+	arc.resize(n + 1);
+
+	cin >> p >> r;
+	int num = 0;
+	int good = 0;
+	for (int i = 0; i < n; i++) {
+		cin >> num;
+		if (num == 0) {
+			cin >> good;
+			goods[i] = good;
+		}
+		else {
+			for (int j = 0; j < num; j++) {
+				cin >> good;
+				arc[i].push_back(good);
+			}
+		}
+	}
+	r = r / 100;
+	dfs(0, 0);
+	sum = 0;
+	while (!res.empty()) {
+		sum = res.top() + sum;
+		res.pop();
+	}
+	cout << fixed << setprecision(1) << sum * p << endl;
+	return 0;
+}

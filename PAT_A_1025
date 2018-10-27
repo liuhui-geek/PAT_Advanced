@@ -1,0 +1,82 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<map>
+#include<algorithm>
+using namespace std;
+map<string, int> amap;
+struct stu {
+	string id;
+	int finalrank, locnum, locrank;
+	int score;
+}student[30002];
+bool calculate(stu a,stu b) {
+	if (a.score > b.score) {
+		return true;
+	}
+	if(a.score == b.score){
+		return a.id < b.id;
+	}
+	return false;
+}
+
+int index = 0;
+int transfer(string id) {
+	int idn = 0;
+	if (amap[id] == 0) {
+		amap[id] = index;
+		idn = index;
+		index++;
+	}
+	return idn;
+}
+int main() {
+	int n;
+	string id;
+	int score;
+	int transferid;
+	cin >> n;
+	int sum = 0;
+	for (int i = 0; i < n; i++) {
+		int num;
+		cin >> num;
+		for (int j = 0; j < num; j++) {
+			cin >> id;
+			cin >> score;
+			transferid = transfer(id);
+			student[transferid].id = id;
+			student[transferid].score = score;
+			student[transferid].locnum = i + 1;
+		}
+		sort(student + sum, student + sum + num, calculate);
+		int rank = 1;
+		student[sum].locrank = rank;
+		for (int j = sum+1; j < sum + num; j++) {
+			rank++;
+			if (student[j].score == student[j - 1].score) {
+				student[j].locrank = student[j - 1].locrank;
+			}
+			else {
+				student[j].locrank = rank;
+			}
+		}
+		sum += num;
+	}
+	sort(student, student + sum,calculate);
+	int rank = 1;
+	student[0].finalrank = rank;
+	for (int j = 1; j <  sum; j++) {
+		rank++;
+		if (student[j].score == student[j - 1].score) {
+			student[j].finalrank = student[j - 1].finalrank;
+		}
+		else {
+			student[j].finalrank = rank;
+		}
+	}
+	cout << sum << endl;
+	for (int i = 0; i < sum; i++) {
+		cout << student[i].id << " " << student[i].finalrank << " " << student[i].locnum << " " << student[i].locrank << endl;
+	}
+	return 0;
+}

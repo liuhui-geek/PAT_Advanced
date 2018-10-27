@@ -1,0 +1,67 @@
+
+#include<iostream>
+#include<string>
+#include<sstream>
+#include<cctype>
+
+using namespace std;
+string test[25] = { "tret","jan", "feb", "mar", "apr", "may", "jun", "jly", "aug", "sep", "oct", "nov", "dec","tam","hel", "maa", "huh", "tou", "kes","hei", "elo", "syy", "lok", "mer", "jou" };
+int main() {
+	int n;
+	cin >> n;
+	string a[100];
+	for (int i = 0; i <=n; i++) {
+		getline(cin,a[i]);
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		int first=0, second=0;
+		int num = 0;
+		//判断为earth or mars;
+		if (isdigit(a[i][0])) {
+			stringstream st;
+			st << a[i];
+			st >> num;
+			if (num / 13) {
+				cout << test[num/13 + 12];
+				if (num % 13) cout << ' ' << test[num % 13];
+			}
+			else {
+				cout << test[num % 13];
+			}
+			cout << endl;
+		}
+		else {
+			int ansnum = 0;
+			if (a[i].length() == 4) {
+				cout << 0 << endl;
+			}else if (a[i].length() == 3) {
+				for (int j = 0; j < 13; j++) {
+					if (a[i] == test[j]) {
+						cout << j << endl;
+						break;
+					}
+				}
+				for (int j = 13; j < 25; j++) {
+					if (a[i] == test[j]) {
+						cout << (j-12)*13 << endl;
+						break;
+					}
+				}
+			}
+			else {
+				string high = a[i].substr(0, 3);
+				string low = a[i].substr(4, 3);
+				for (int j = 0; j < 25; j++) {
+					if (high == test[j]) 
+						ansnum += (j - 12) * 13;
+					if (low == test[j]) 
+						ansnum += j;	
+				}
+				cout << ansnum << endl;
+			}
+		}
+	}
+
+	return 0;
+}

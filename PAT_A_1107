@@ -1,0 +1,70 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int fa[2002];
+bool exist[2002];
+int cns[2002];
+bool cmp(int a,int b) {
+	return a > b;
+}
+int findfather(int a) {
+	int x = a;
+	while (a != fa[a]) {
+		a = fa[a];
+	}
+	while (x != fa[x]) {
+		int z = x;
+		x = fa[x];
+		fa[z] = a;
+	}
+	return a;
+}
+void Union(int a,int b) {
+	int aa = findfather(a);
+	int bb = findfather(b);
+	if (aa != bb) {
+		fa[bb] = aa;
+	}
+}
+int main() {
+	int n;
+	cin >> n;
+	for (int i = 0; i < 2002; i++) {
+		fa[i] = i;
+	}
+	for (int i = 1001; i < 1001+n; i++) {
+		int m;
+		char c;
+		cin >> m;
+		cin >> c;
+		for (int j = 0; j < m; j++) {
+			int k;
+			cin >> k;
+			Union(i, k);
+			exist[i] = true;
+			exist[k] = true;
+		}
+	}
+	for (int i = 1001; i < 1001+n; i++) {
+		int root = findfather(i);
+		if (exist[root] == true) {
+			cns[root]++;
+		}
+	}
+	sort(cns, cns+1001+n, cmp);
+	int sum = 0;
+	for (int i = 0; i <  n; i++) {
+		if (cns[i] != 0) {
+			sum++;
+		}
+	}
+	cout << sum << endl;
+	cout << cns[0];
+	for (int i = 1; i < sum; i++) {
+		cout << " " << cns[i];
+	}
+	
+
+
+	return 0;
+}

@@ -1,0 +1,79 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<map>
+#include<set>
+using namespace std;
+int n, k;
+map<int, int> amap;
+map<string, int >bmap;
+//因为输入的是string，无法进行存储，所以采用两次map转化为int;
+map<string, int> stringtoint;
+map<int, string> inttostring;
+int id = 1;
+//邻接矩阵
+int arc[2010][2010];
+bool visit[2010];
+bool flag = false;   //标志是否是gang
+
+void dfs(int root,int &head,int &num ,int &length) {
+	num++;
+	if (amap[root] > amap[head]) {
+		head = root;
+	}
+	visit[root] = true;
+	for (int i = 1; i < id; i++) {
+		
+		if (arc[root][i] > 0 ) {
+			length = arc[root][i] + length;
+			arc[root][i] = arc[i][root] = 0;
+			if (visit[i] == false) {
+				dfs(i,head,num,length);
+			}
+		}
+	}
+}
+
+//将字母转换为数字
+int change(string a) {
+	if (stringtoint[a] == 0) {
+		stringtoint[a] = id;
+		inttostring[id] = a;
+		return id++;
+	}
+	else {
+		return stringtoint[a];
+	}
+}
+
+
+int main() {
+	cin >> n >> k;
+	string a, b;
+	int time;
+	for (int i = 0; i < n; i++) {
+		cin >> a >> b;
+		cin >> time;
+		int a1 = change(a);
+		int b1 = change(b);
+		amap[a1] +=  time;
+		amap[b1] +=  time;
+		arc[a1][b1] += time;
+		arc[b1][a1] += time;
+	}
+	for (int i = 1; i < id; i++) {
+		if (visit[i] == false) {
+			int num = 0, length = 0;
+			int head = i;
+			dfs(i, head, num, length);
+			if (num > 2 && length>k) {
+				bmap[inttostring[head]] = num;
+			}
+		}
+	}
+		cout << bmap.size() << endl;
+		for (auto it = bmap.begin(); it != bmap.end(); it++) {
+			cout << it->first << " " << it->second << endl;
+		}
+	return 0;
+}

@@ -1,0 +1,58 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+using namespace std;
+struct tree {
+	int weigth;
+	vector<int> child;           //节点数组
+}a[101];
+int path[101];
+int n, m, s;                                       
+int cmp(int i,int j) {
+	return a[i].weigth > a[j].weigth;
+}
+void dfs(int index, int num, int numweigth) {          //参数：根，层数，权重
+	if (numweigth > s) {
+		return;
+	}
+	if (numweigth == s) {
+		if (a[index].child.size() != 0) return;
+		for (int i = 0; i < num; i++) {
+			cout << a[path[i]].weigth;
+			if (i < num - 1)
+				cout << " ";
+			else {
+				cout << endl;
+			}
+		}
+		return;
+	}
+	for (int i = 0; i < a[index].child.size(); i++) {
+		int child = a[index].child[i];
+		path[num] = child;
+		dfs(child, num + 1, numweigth+a[child].weigth);
+	}
+}
+int main() {
+	int weigth[101];
+	cin >> n >> m >> s;
+	for (int i = 0; i < n; i++) {
+		cin >> a[i].weigth;                 //存放节点权值
+	}
+
+	int root;
+	int num = 0, child = 0;
+	for (int i = 0; i < m; i++) {
+		cin >> root;
+		cin >> num;
+		for (int i = 0; i < num; i++) {
+			cin >> child;
+			a[root].child.push_back(child);
+		}
+		sort(a[root].child.begin(), a[root].child.end(),cmp);
+	}
+	path[0] = 0;
+	dfs(0, 1, a[0].weigth);
+	return 0;
+}

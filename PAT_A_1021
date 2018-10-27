@@ -1,0 +1,145 @@
+//方法一
+#include<iostream>
+#include<cstdio>
+#include<vector>
+using namespace std;
+#define MAX 10002
+//int arc[MAX][MAX];
+vector<vector<int>> arc;
+bool visit[MAX];
+bool v[MAX];
+int maxlength = 0;
+int maxmaxlength = 0;
+int length[MAX];
+int n;
+void dfs(int j,int num) {
+	visit[j] = true;
+	if (num > maxlength) {
+		maxlength = num;
+		if (maxlength > maxmaxlength) {
+			maxmaxlength = maxlength;
+		}
+	}
+	for (int i = 0; i < arc[j].size(); i++) {
+		if (visit[arc[j][i]] == false) {
+			dfs(arc[j][i], num+1);
+		}
+	}
+}
+int main() {
+	cin >> n;
+	arc.resize(n + 1);
+	for (int i = 0; i < n-1; i++) {
+		int a, b;
+		scanf_s("%d%d", &a, &b);
+		arc[a].push_back(b);
+		arc[b].push_back(a);
+	}
+	int component = 0;
+	for (int i = 1; i <= n; i++) {            //判断是否联通
+		if (visit[i] == false) {
+			dfs(i, 1);
+			component++;
+		}
+	}
+	if (component != 1) {
+		cout << "Error: " << component << " components";
+	}
+	else {
+		maxlength = 0;
+		maxmaxlength = 0;
+		for (int i = 1; i <= n; i++) {
+			fill(visit, visit + MAX, false);
+			visit[i] = true;
+			v[i] = true;
+			dfs(i, 0);
+			length[i] = maxlength;
+			maxlength = 0;
+		}
+		for (int i = 1; i <= n; i++) {
+			if (length[i] == maxmaxlength) {
+				cout << i << endl;
+			}
+		}
+	}
+	
+	return 0;
+}
+
+
+
+
+
+
+//方法二
+//两次dfs遍历，较一更好，首先找出一个最远点集，而后以此为基础取第一个再找出其余最远点，合并
+#include<iostream>
+#include<cstdio>
+#include<vector>
+#include<set>
+using namespace std;
+#define MAX 10002
+vector<vector<int>> arc;
+vector<int> temp;
+set<int> res;
+bool visit[MAX];
+int maxlength = 0;     //最大深度
+int firstpoint = 0;
+void dfs(int root, int length) {
+	if (length > maxlength) {
+		temp.clear();
+		temp.push_back(root);
+		maxlength = length;
+	}
+	else if (length == maxlength) {
+		temp.push_back(root);
+	}
+	visit[root] = true;
+	for (int i = 0; i < arc[root].size(); i++) {
+		if (visit[arc[root][i]] == false) {
+			dfs(arc[root][i], length + 1);
+		}
+	}
+}
+int main() {
+	//输入数据
+	int n;
+	cin >> n;
+	arc.resize(n + 1);
+	for (int i = 0; i < n - 1; i++) {
+		int a, b;
+		cin >> a >> b;
+		arc[a].push_back(b);
+		arc[b].push_back(a);
+	}
+	int component = 0;
+	//深度优先遍历，两种情况，联通，不联通
+	for (int i = 1; i <= n; i++) {
+		if (visit[i] == false) {
+			dfs(i, 0);
+			if (i == 1) {
+				if (temp.size() != 0)
+					firstpoint = temp[0];
+				for (int j = 0; j < temp.size(); j++) {
+					res.insert(temp[j]);
+				}
+			}
+			component++;
+		}
+	}
+	if (component >= 2) {
+		cout << "Error: " << component << " components";
+	}
+	else {
+		fill(visit, visit + MAX, false);
+		temp.clear();
+		maxlength = 0;
+		dfs(firstpoint, 0);
+		for (int j = 0; j < temp.size(); j++) {
+			res.insert(temp[j]);
+		}
+		for (auto it = res.begin(); it != res.end(); it++)
+			cout << *it << endl;
+	}
+	return 0;
+}

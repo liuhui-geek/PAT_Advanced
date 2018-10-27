@@ -1,0 +1,117 @@
+//BFS,最优解法
+#include<iostream>
+#include<queue>
+#include<vector>
+using namespace std;
+int n, l;
+vector<vector<int>> arc; //邻接表
+struct node {
+	int id;
+	int layer;
+}weibo[1002];
+int bfs(node anode) {
+	bool visit[1002] = {false};
+	queue<node> q;
+	q.push(anode);
+	visit[anode.id] = true;
+	int num = 0;
+	while (!q.empty()) {
+		node bnode = q.front();
+		q.pop();
+		int id = bnode.id;
+		for (int i = 0; i < arc[id].size(); i++) {
+			int nextid = arc[id][i];
+			if (visit[nextid] == false && bnode.layer < l) {
+				node next;
+				next.id = nextid;
+				next.layer = bnode.layer + 1;
+				q.push(next);
+				visit[nextid] = true;
+				num++;
+			}
+		}
+	}
+	return num++;
+}
+int main()
+{
+	cin >> n >> l;
+	int m = 0,user = 0;
+	arc.resize(n + 1);
+	for (int i = 1; i <= n; i++) {
+		cin >> m;
+		for (int j = 0; j < m; j++) {
+			cin >> user;
+			arc[user].push_back(i);
+		}
+	}
+	int query = 0;
+	cin >> query;
+	for (int i = 0; i < query; i++) {
+		int q1 = 0;
+		cin >> q1;
+		node anode;
+		anode.id = q1;
+		anode.layer = 0;
+		cout<<bfs(anode)<<endl;
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+/*
+DFS, 有两个测试点不通过
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<set>
+using namespace std;
+vector<vector<int>> arc;
+bool visit[1002];
+vector<int> v;
+
+int n, l;     //城市个数，查询层数
+int k = 0;  //查询个数
+
+void dfs(int q,int &num,int level) {
+	if (level == 3) {
+		return;
+	}
+	for (int i = 0; i < arc[q].size(); i++) {
+		if (visit[arc[q][i]] == false) {
+			visit[arc[q][i]] = true;
+			num++;
+		}
+		dfs(arc[q][i],num,level+1);
+	}
+}
+
+int main() {
+	cin >> n >> l;
+	int m = 0,m1=0;
+	arc.resize(n + 1);
+	for (int i = 1; i <= n; i++) {
+		cin >> m;
+		for (int j = 0; j < m; j++) {
+			cin >> m1;
+			arc[m1].push_back(i);
+		}
+	}
+	cin >> k;
+	int query;
+	for (int i = 0; i < k; i++) {
+		cin >> query;
+		int num = 0;
+		fill(visit, visit + 1002, false);
+		visit[query] = true;
+		dfs(query,num,0);
+		cout << num << endl;
+	}
+	return 0;
+}
+*/
