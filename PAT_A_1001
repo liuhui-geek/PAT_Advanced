@@ -1,4 +1,5 @@
 //字符串分割的方式解决，分为位数小于等于3和位数大于3两种情况处理
+//方法一
 #include<iostream>
 #include<string>
 using namespace std;
@@ -56,4 +57,34 @@ int main()
 		return 0;
 }
 
+//方法二：使用substr分割，并枚举条件，简单
+#include<iostream>
+#include<math.h>
+#include<string>
+using namespace std;
 
+int main() {
+	long long a, b;
+	cin >> a >> b;
+	long long c = a + b;
+	bool flag = true;
+	if (c < 0) {
+		flag = false;
+	}
+	c = fabs(c);
+	string tranc = to_string(c);
+	int length = tranc.length();
+	if (!flag) {
+		cout << "-";
+	}
+	if (length <= 3) {
+		cout << tranc;
+	}
+	else if(length<=6){
+		cout << tranc.substr(0,length-3)<<","<<tranc.substr(length-3,length);
+	}
+	else {	
+		cout << tranc.substr(0, length - 6) << "," << tranc.substr(length - 6, length-4)<<","<< tranc.substr(length - 3, length);
+	}
+	return 0;
+}
