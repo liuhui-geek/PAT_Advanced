@@ -1,0 +1,89 @@
+//第一种方法，树的深度优先遍历DFS
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+#define MAX 101
+vector<int> node[MAX];
+int dep[MAX];
+int maxdep = -1;
+void DFS(int idk, int depth) {
+	if (node[idk].size() == 0) {
+		dep[depth]++;
+		maxdep = max(depth, maxdep);
+		return;
+	}
+	for (int i = 0; i < node[idk].size(); i++) {
+		DFS(node[idk][i], depth+1);
+	}
+}
+
+int main() {
+	int n, m;
+	cin >> n >> m;
+	int id,k;
+	int idk;
+	
+	for (int i = 0; i < m; i++) {
+		cin >> id >> k;
+		for (int j = 0; j < k; j++) {
+			cin >> idk;
+			node[id].push_back(idk);
+		}
+	}
+	DFS(1, 0);
+	cout << dep[0];
+	for (int i = 1; i <= maxdep; i++)
+		cout<<" "<<dep[i];
+	return 0;
+}
+
+
+
+//第二种方法，树的广度优先遍历
+#include<iostream>
+#include<algorithm>
+#include<queue>
+using namespace std;
+#define MAX 101
+vector<int> node[MAX];
+int dep[MAX];
+int level[MAX];
+int maxdep = -1;
+
+void BFS() {
+	queue<int> p;
+	p.push(1);
+	while (!p.empty()) {
+		int root = p.front();
+		p.pop();
+		maxdep = max(level[root], maxdep);
+		for (int i = 0; i < node[root].size(); i++) {
+			p.push(node[root][i]);
+			level[node[root][i]] = level[root] + 1;
+		}
+		if (node[root].size() == 0) {
+			dep[level[root]]++;
+		}
+	}
+}
+int main() {
+	int n, m;
+	cin >> n >> m;
+	int id, k;
+	int idk;
+
+	for (int i = 0; i < m; i++) {
+		cin >> id >> k;
+		for (int j = 0; j < k; j++) {
+			cin >> idk;
+			node[id].push_back(idk);
+		}
+	}
+	BFS();
+	cout << dep[0];
+	for (int i = 1; i <= maxdep; i++)
+		cout << " " << dep[i];
+	return 0;
+}
