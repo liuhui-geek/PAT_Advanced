@@ -1,0 +1,22 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+int main(){
+	int f1,s1,t1,f2,s2,t2;
+	int f3,s3,t3;
+	int first;
+	int advance,remainder;
+	scanf("%d.%d.%d",&t1,&s1,&f1);
+	scanf("%d.%d.%d",&t2,&s2,&f2);
+	f3 = f1+f2;
+	advance = f3/29;
+	f3 = f3%29;
+	s3 = s1+s2+advance;
+	advance = s3/17;
+	s3 = s3%17;
+	t3 = t1+t2+advance;
+	cout<<t3<<"."<<s3<<"."<<f3;
+	return 0;
+}
