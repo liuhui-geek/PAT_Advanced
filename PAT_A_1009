@@ -1,0 +1,46 @@
+#include<iostream>
+#include<iomanip>
+#include<map>
+using namespace std;
+
+int main(){
+	map<int, double> v, u;
+	map<int,double >s;
+	int n;
+	int exp = 0;
+	double coe = 0;
+	cin >> n;
+	for (int j = 0; j < n; j++) {
+		cin >> exp;
+		cin>> coe;
+		v[exp] = coe;
+	}
+	cin >> n;
+	for (int j = 0; j < n; j++) {
+		cin >> exp;
+		cin >> coe;
+		u[exp] = coe;
+	}
+	for (int i = 0; i < v.size(); i++) {
+		for (int j = 0; j < u.size(); j++) {
+			s[i + j] = s[i + j] + v[i] * u[j];
+		}
+	}
+	map<int, double>::iterator m = s.begin();
+	while (m != s.end()) {
+		if ((*m).second == 0) {
+			s.erase(m++);
+		}
+		else {
+			m++;
+		}
+	}
+	cout << s.size();
+	map<int, double>::reverse_iterator result = s.rbegin();
+	while (result != s.rend()) {
+		cout << " " << (*result).first;
+		cout<<" " <<fixed<<setprecision(1)<< (*result).second;
+		result++;
+	}
+	return 0;
+}

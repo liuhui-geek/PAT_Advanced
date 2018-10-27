@@ -1,0 +1,36 @@
+//最长公共子序列
+#include<iostream>
+#include<sstream>
+using namespace std;
+int a[10002];
+int main() {
+	int n;
+	cin >> n;
+	bool flag = false;
+	for (int i = 0; i < n; i++) {
+		cin >> a[i];
+		if (a[i] > 0) {           //判断特殊情况，是否全部为负数
+			flag = true;
+		}
+	}
+	int first = 0, end = 0, sum = 0, maxsum = a[0];
+	if (flag) {
+		for (int i = -1; i < n - 1; i++) {          //两层循环判断
+			for (int j = i + 1; j < n; j++) {
+				sum = sum + a[j];
+				if (sum > maxsum) {
+					first = i + 1;
+					end = j;
+					maxsum = sum;
+				}
+			}
+			sum = 0;
+		}
+		cout << maxsum << " " << a[first] << " " << a[end];
+	}
+	else {
+		maxsum = 0;
+		cout << maxsum << " " << a[0] << " " << a[n-1];
+	}
+	return 0;
+}

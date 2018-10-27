@@ -1,0 +1,69 @@
+#include<iostream>
+#include<string>
+#include<cctype>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+long long todec(string a,long long radix);
+void binSearch(long long low, long long high, string n2, long long first);
+long long tag, radix;
+string n1, n2;
+long long first;
+int main() {
+	cin >> n1 >> n2;
+	cin >> tag >> radix;
+	if (tag == 1) {
+		first = todec(n1,radix);
+	}
+	else if (tag == 2) {
+		first = todec(n2, radix);
+		n2 = n1;
+	}
+	long long length2 = n2.length();
+	long long low = 0;
+	for (long long i = 0; i < length2; i++) {
+		long long num = 0;
+		if (isalpha(n2[i]) ? num = n2[i] - '0' - 39 : num = n2[i] - '0') {
+			low = max(num, low);
+		}
+	}
+	low++;
+	long long high = first;
+	high = max(low, first+1);
+	//二分查找法
+	binSearch(low,high,n2,first);
+	return 0;
+}
+long long todec(string a,long long radix) {
+	string b = a;
+	long long length = b.length();
+	long long index = 0;
+	long long num = 0;
+	for (long long i = length-1; i >=0; i--) {
+		if (!isalpha(b[i])) {
+			num = num + (b[i]-'0') * pow(radix, index++);
+		}
+		else {
+			num = num + (b[i] -'a'+ 10) * pow(radix, index++);
+		}
+	}
+	return num;
+}
+
+void binSearch(long long  low, long long high,string n2,long long first) {
+	while (low <= high) {
+		long long middle = (low + high) / 2;
+		long long num = todec(n2, middle);
+		if (num == first) {
+			cout << middle;
+			return ;
+		}
+		else if (num>first||num<0) {
+			high = middle - 1;
+		}
+		else {
+			low = middle + 1;
+		}
+	}
+	cout << "Impossible";
+}
