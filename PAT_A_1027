@@ -1,0 +1,48 @@
+#include<iostream>
+#include<string>
+#include<math.h>
+
+using namespace std;
+void transform(int m){
+	switch (m)
+	{
+	case 10:
+		cout<<"A";
+		break;
+	case 11:
+		cout<<"B";
+		break;
+	case 12:
+		cout<<"C";
+		break;
+	default:
+		cout<<m;
+		break;
+	}
+}
+int main(){
+	int color[3] = {0};
+	string res;
+	int ans[6];
+	int first,second;
+	int red,green,blue;
+	for(int i=0;i<3;i++){
+		cin>>color[i];
+	}
+	cout<<"#";
+	for(int i=0;i<3;i++){
+		first = second  = 0;
+		if(color[i]>=13){
+			first = color[i]/13;
+			second = color[i]%13;
+		}else{
+			second = color[i];
+		}
+		transform(first);
+		transform(second);
+	}
+
+
+
+	return 0;
+}
