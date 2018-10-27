@@ -1,0 +1,59 @@
+//字符串分割的方式解决，分为位数小于等于3和位数大于3两种情况处理
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main()
+{
+	int a = 0, b = 0;
+	int c = 0;
+	string m;
+	int flag = 0;
+	cin >> a >> b;
+	c = a + b;
+	if (c < 0) {                //如果和小于0，则取绝对值，并设置标志量为-1
+		c = abs(c);
+		flag = -1;
+	}
+	m = to_string(c);          //将整数转换为字符串，但此处需要注意该函数以倒序存入字符串中
+	if (flag == -1) {           //若为负数，则取回原值
+		c = -c;
+	}
+	int length = m.length();
+	if (length <= 3) {            //小于3直接输出
+			cout << c;
+	}else {
+			int first = length % 3;      //取前面特殊位
+			int num = length / 3;        //判断有几组3个位
+			int k = 0;
+			if (first != 0) {            //位数不是3的整数倍处理方法
+				if (c < 0) {
+					cout << "-";
+				}
+				for (int i = 0; i < first; i++) {
+					cout << m[i];
+				}
+				for (int i = 0; i < num; i++) {
+					cout << ",";
+					cout << m[first + k] << m[first+k+1] << m[first+k+2];
+					k = k + 3;
+				}
+			}
+			else {                        //位数是3的整数倍处理方法
+				if (c < 0) {
+					cout << "-";
+				}
+				for (int i = 0;; i++) {
+					cout << m[first + k] << m[first + k + 1] << m[first + k + 2];
+					if (i == num - 1) {
+						break;
+					}
+					cout << ",";
+					k = k + 3;
+				}
+			}
+		}
+		return 0;
+}
+
+
