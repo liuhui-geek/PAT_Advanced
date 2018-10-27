@@ -1,0 +1,51 @@
+#include<iostream>
+#include<math.h>
+#include<vector>
+#include<string>
+using namespace std;
+vector<string> ans;
+int main() {
+	int n;
+	int num = 0;
+	cin >> n;
+	string name, password;
+	for (int k = 0; k < n; k++) {
+		cin >> name >> password;
+		bool flag = false;
+		for (int i = 0; i < password.length(); i++) {
+			if (password[i] == '0') {
+				password[i] = '%';
+				flag = true;
+			}
+			else if (password[i] == 'O') {
+				password[i] = 'o';
+				flag = true;
+			}
+			else if (password[i] == '1') {
+				password[i] = '@';
+				flag = true;
+			}
+			else if (password[i] == 'l') {
+				password[i] = 'L';
+				flag = true;
+			}
+		}
+		if (flag == true) {
+			ans.push_back(name + " " + password);
+		}
+	}
+	if (n == 1) {
+		cout << "There is " << 1 << " account and no account is modified";
+	}
+	else if(ans.size()==0){
+		cout << "There are " << n << " accounts and no account is modified";
+	}
+	else {
+		cout << ans.size() << endl;
+		for (int i = 0; i < ans.size(); i++) {
+			cout << ans[i] << endl;
+		}
+	}
+
+	return 0;
+}
