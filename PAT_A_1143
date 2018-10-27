@@ -1,0 +1,144 @@
+//方法一，不建立树，直接判断，测试案例全部通过
+#include<iostream>
+#include<map>
+#include<vector>
+using namespace std;
+
+int M = 0, N = 0;
+int U = 0, V = 0;
+int a = 0;
+int main() {
+	int num = 0;
+	map<int, bool> amp;
+	cin >> M >> N;
+	vector<int> ve(N);
+	for (int i = 0; i < N; i++) {
+		cin >> ve[i];
+		amp[ve[i]] = true;
+	}
+	for (int i = 0; i < M; i++) {
+		cin >> U >> V;
+		for (int j = 0; j < N; j++) {
+			a = ve[j];
+			if ((a > U&&a < V) || (a<U&&a>V) || (a == U) || (a == V)) break;
+		}
+		if (a == U || a == V) {
+			cout << (a == U ? U : V) << " is an ancestor of " << (a == U ? V : U) << "." << endl;
+		}
+		else if (amp[U] == false && amp[V] == false) {
+			cout << "ERROR: " << U << " and " << V << " are not found." << endl;
+		}
+		else if (amp[U] == false || amp[V] == false) {
+			cout << "ERROR: " << (amp[U] == false ? U : V) << " is not found." << endl;
+		}
+		else {
+			cout << "LCA of " << U << " and " << V << " is " << a << " ." << endl;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+//方法二，建立树存放内容，而后进行迭代搜索判断，测试用例有两个超时，仅供参考
+#include<iostream>
+#include<map>
+using namespace std;
+
+typedef struct tree {
+	int data;
+	tree *rchild, *lchild;
+}*nodetree;
+nodetree createBST();
+void search(nodetree root);
+int M = 0, N = 0;
+int U = 0, V = 0;
+map<int, bool>amp;
+
+int main() {
+	cin >> M >> N;
+	nodetree root;
+	root = createBST();
+
+	for (int i = 0; i < M; i++) {
+		cin >> U >> V;
+		if (amp[U] == true && amp[V] == true) {
+			search(root);
+		}
+		else if (amp[U] == false && amp[V] == false) {
+			cout << "ERROR: " << U << " and " << V << " are not found." << endl;
+		}
+		else {
+			cout << "ERROR: " << (amp[U] == false ? U : V) << " is not found." << endl;
+		}
+	}
+	return 0;
+}
+
+nodetree createBST() {             //创建二叉搜索树
+	nodetree head = (nodetree)malloc(sizeof(tree));
+	nodetree p;
+	int key = 0;
+	int flag = -1;
+	cin >> key;
+	amp[key] = true;
+	head->data = key;
+	head->lchild = NULL;
+	head->rchild = NULL;
+	for (int i = 1; i < N; i++) {
+		p = head;
+		cin >> key;
+		amp[key] = true;
+		while (true) {
+			if (key < p->data) {
+				flag = 1;
+				if (p->lchild != NULL) {  
+					p = p->lchild;
+				}
+				else {
+					break;
+				}
+			}
+			else if(key>=p->data){
+				flag = 0;
+				if (p->rchild!=NULL){
+					p = p->rchild;
+				}
+				else
+					break;
+			}
+		}
+		nodetree q = (nodetree)malloc(sizeof(tree));
+		q->data = key;
+		q->lchild = NULL;
+		q->rchild = NULL;
+		if (flag == 1)
+			p->lchild = q;
+		else {
+			p->rchild = q;
+		}
+	}
+	return head;
+}
+//递归搜索
+void search(nodetree root) {   
+	if (root == NULL) return;
+	if (root->data == U || root->data == V) {
+		cout <<(root->data == U?U:V)<< " is an ancestor of " << (root->data == U ? V : U) << "." << endl;
+		return;
+	}
+	else if ((U>root->data&&V<root->data)|| (U<root->data&&V>root->data)) {
+		cout << "LCA of " << U << " and " << V << " is " << root->data << "." << endl;
+		return;
+	}
+	else if (U < root->data&&V < root->data) {
+		  search(root->lchild);
+	}
+	else
+		search(root->rchild);
+}

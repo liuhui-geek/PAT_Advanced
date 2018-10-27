@@ -1,0 +1,89 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<stack>
+using namespace std;
+int fa[10004];
+int res[10004];
+map<int, bool> amap;
+int findfather(int a) {
+	int x = a;
+	while (a != fa[a]) {
+		a = fa[a];
+	}
+	while (x != fa[x]) {
+		int y = x;
+		x = fa[x];
+		fa[y] = a;
+	}
+	return a;
+}
+void Union(int a,int b) {
+	int faa = findfather(a);
+	int fbb = findfather(b);
+	if (faa != fbb) {
+		fa[faa] = fbb;
+	}
+}
+
+int main() {
+	int n = 0;
+	cin >> n;
+	for (int i = 1; i < 10004; i++) {
+		fa[i] = i;
+	}
+	for (int i = 0; i < n; i++) {
+		int m = 0,num = 0,id = 0;
+		cin >> m;
+		cin >> id;
+		amap[id] = true;
+		for (int j = 0; j < m-1; j++) {
+			cin >> num;
+			Union(id, num);
+			amap[num] = true;
+		}
+	}
+	for (int i = 0; i < 10004; i++) {
+		if (amap[i] == true) {
+			int root = findfather(i);
+			res[root]++;
+		}
+	}
+	int numtree = 0, numbird = 0;
+	for (int i = 0; i < 10004; i++) {
+		if (amap[i] == true && res[i] != 0) {
+			numtree++;
+			numbird += res[i];
+		}
+	}
+	cout << numtree << " " << numbird << endl;
+	int query = 0;
+	cin >> query;
+	for (int i = 0; i < query; i++) {
+		int q = 0, w = 0;
+		cin >> q >> w;
+		int qa = findfather(q);
+		int wa = findfather(w);
+		if (qa == wa) {
+			cout << "Yes" << endl;
+		}
+		else {
+			cout << "No" << endl;
+		}
+	}
+
+	return 0;
+}
+	
+/*
+5
+3 10 1 2
+2 3 4
+4 1 5 7 8
+3 9 6 4
+2 1 4
+2
+10 5
+3 7
+*/

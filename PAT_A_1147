@@ -1,0 +1,191 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+vector<int> tree[101];
+
+int index = 0;
+int m, n;
+void postorder(int i) {
+	if (i>n-1) {
+		return;
+	}
+	postorder(2 * i + 1);
+	postorder(2 * i + 2);
+	cout << tree[index][i];
+	if (i != 0) {
+		cout << " ";
+	}
+}
+
+int main() {
+	
+	cin >> m >> n;
+	int num;
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			cin >> num;
+			tree[i].push_back(num);
+		}
+	}
+	bool max = false, min = false;
+	bool notheap = false;
+	if (n % 2 == 0) {
+		int k = (n - 2) / 2;
+		for (int i = 0; i < m; i++) {
+			min = false, max = false, notheap = false;
+			if (tree[i][0] <= tree[i][1]) {
+				min = true;
+				for (int j = 0; j < k; j++) {
+					if (tree[i][j] <= tree[i][2 * j + 1] && tree[i][j] <= tree[i][2 * j + 2])
+						min = true;
+					else {
+						notheap = true;
+						break;
+					}
+				}
+				if (tree[i][k] > tree[i][2 * k + 1]) {
+					notheap = true;
+				}
+			}
+			else if (tree[i][0] >= tree[i][1]) {
+				max = true;
+				for (int j = 1; j < k; j++) {
+					if (tree[i][j] >= tree[i][2 * j + 1] && tree[i][j] >= tree[i][2 * j + 2])
+						max = true;
+					else {
+						notheap = true;
+						break;
+					}
+				}
+				if (tree[i][k] < tree[i][2 * k + 1]) {
+					notheap = true;
+				}
+			}
+			else {
+				notheap = true;
+			}
+			
+
+			if (notheap == false && min == true) {
+				cout << "Min Heap" << endl;
+				index = i;
+				postorder(0);
+				cout << endl;
+			}
+			else if (notheap == false && max == true) {
+				cout << "Max Heap" << endl;
+				index = i;
+				postorder(0);
+				cout << endl;
+			}
+			else {
+				cout << "Not Heap" << endl;
+				index = i;
+				postorder(0);
+				cout << endl;
+			}
+		}
+	}
+	else { 
+		int k = (n - 3) / 2;
+		for (int i = 0; i < m; i++) {
+			min = false, max = false, notheap = false;
+			if (tree[i][0] <= tree[i][1]) {
+				min = true;
+				for (int j = 0; j < k; j++) {
+					if (tree[i][j] <= tree[i][2 * j + 1] && tree[i][j] <= tree[i][2 * j + 2])
+						min = true;
+					else {
+						notheap = true;
+						break;
+					}
+				}
+				if (tree[i][k] > tree[i][2 * k + 1]|| tree[i][k] > tree[i][2 * k + 2]) {
+					notheap = true;
+				}
+			}
+			else if (tree[i][0] >= tree[i][1]) {
+				max = true;
+				for (int j = 1; j < k; j++) {
+					if (tree[i][j] >= tree[i][2 * j + 1] && tree[i][j] >= tree[i][2 * j + 2])
+						max = true;
+					else {
+						notheap = true;
+						break;
+					}
+				}
+				if (tree[i][k] < tree[i][2 * k + 1]|| tree[i][k] < tree[i][2 * k + 2]) {
+					notheap = true;
+				}
+			}
+			else {
+				notheap = true;
+			}
+
+			if (notheap == false && min == true) {
+				cout << "Min Heap" << endl;
+				index = i;
+				postorder(0);
+				cout << endl;
+
+			}
+			else if (notheap == false && max == true) {
+				cout << "Max Heap" << endl;
+				index = i;
+				postorder(0);
+				cout << endl;
+			}
+			else {
+				cout << "Not Heap" << endl;
+				index = i;
+				postorder(0);
+				cout << endl;
+			}
+
+		}
+	}
+
+
+	return 0;
+}
+
+/*
+3 9
+98 72 86 60 65 12 23 50 30
+8 38 25 58 52 82 70 60 80
+10 28 15 12 34 9 8 56 2
+*/
+
+/*
+#include <iostream>
+#include <vector>
+using namespace std;
+int m, n;
+vector<int> v;
+void postOrder(int index) {
+	if (index >= n) return;
+	postOrder(index * 2 + 1);
+	postOrder(index * 2 + 2);
+	printf("%d%s", v[index], index == 0 ? "\n" : " ");
+}
+int main() {
+	scanf_s("%d%d", &m, &n);
+	v.resize(n);
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) scanf_s("%d", &v[j]);
+		int flag = v[0] > v[1] ? 1 : -1;
+		for (int j = 0; j <= (n - 1) / 2; j++) {
+			int left = j * 2 + 1, right = j * 2 + 2;
+			if (flag == 1 && (v[j] < v[left] || (right < n && v[j] < v[right]))) flag = 0;
+			if (flag == -1 && (v[j] > v[left] || (right < n && v[j] > v[right]))) flag = 0;
+		}
+		if (flag == 0) printf("Not Heap\n");
+		else printf("%s Heap\n", flag == 1 ? "Max" : "Min");
+		postOrder(0);
+	}
+	return 0;
+}
+*/

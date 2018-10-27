@@ -1,0 +1,60 @@
+//#include<bits/stdc++.h>
+#include<iostream>
+
+using namespace std;
+int v[202][202];
+int num[202];
+int main() {
+	int Nv = 0, Ne = 0;
+	cin >> Nv >> Ne;
+	int x = 0, y = 0;
+	for (int i = 0; i < Ne; i++) {     //边连接度更新
+		cin >> x >> y;
+		v[x][y] = v[y][x] = 1;
+	}
+	int M = 0, K = 0;
+	cin >> M;
+	bool flag = true; 
+	for (int i = 0; i < M; i++) {          //边输入边处理
+		cin >> K;
+		for (int j = 0; j < K; j++) {
+			cin >> num[j];
+		}
+		for (int m = 0; m < K - 1; m++) {             //遍历数组，看是否形成团
+			for (int n = m + 1; n < K; n++) {
+				if (v[num[m]][num[n]] != 1)
+				{
+					cout << "Not a Clique" << endl;
+					flag = false;
+					break;
+				}
+			}
+			if (!flag) {                             //判断完毕，跳出循环
+				break;
+			}
+		}
+		bool flag2 = true;
+		int sum = 0;
+		if (flag) {                                 //若可以形成团，继续判断，是否可为最大团
+			for (int m = 1; m <= Nv; m++) {
+				for (int n = 0; n < K; n++) {
+					if (v[m][num[n]] != 1) {
+						flag2 = false;
+						sum++;
+						break;
+					}
+				}
+				if (flag2 == true) {
+					cout << "Not Maximal" << endl;
+					break;
+				}
+				flag2 = true;
+			}
+		}
+		if (sum == Nv) {
+			cout << "Yes" << endl;
+		}
+		flag = true;                              //更新状态最重要
+	}
+	return 0;
+}

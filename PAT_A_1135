@@ -1,0 +1,77 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+struct node {
+	int data;
+	node *rchild, *lchild;
+};
+node *build(node *root,int data) {
+	if (root == NULL) {
+		root = new node();
+		root->data = data;
+		root->lchild = root->rchild = NULL;
+	}
+	else if(abs(data)<=abs(root->data)){
+		root->lchild = build(root->lchild,data);
+	}
+	else {
+		root->rchild = build(root->rchild, data);
+	}
+	return root;
+}
+bool judge(node *root) {
+	if (root == NULL) {
+		return true;
+	}
+	if (root->data < 0) {
+		if (root->lchild != NULL && root->lchild->data < 0)
+			return false;
+		if (root->rchild != NULL && root->rchild->data < 0)
+			return false;
+	}
+	return judge(root->lchild)&&judge(root->rchild);
+}
+int getsum(node *root) {
+	if (root == NULL) {
+		return 0;
+	}
+	int l = getsum(root->lchild);
+	int r = getsum(root->rchild);
+	return root->data > 0? max(l, r) + 1: max(l, r);
+}
+bool judge1(node *root) {
+	if (root == NULL)
+		return true;
+	int l = getsum(root->lchild);
+	int r = getsum(root->rchild);
+	if (l != r)
+		return false;
+	return judge1(root->lchild) && judge1(root->rchild);
+}
+int main() {
+	int n;
+	int a[31];
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		int m;
+		cin >> m;
+		node *root = NULL;
+		int a = 0;
+		for (int j = 0; j < m; j++) {
+			int num;
+			cin >> num;
+			if (j == 0) {
+				a = num;
+			}
+			root = build(root, num);
+		}
+		if (a < 0 || judge(root) == false || judge1(root) == false) {
+			cout << "No" << endl;
+		}
+		else {
+			cout << "Yes" << endl;
+		}
+	}
+	return 0;
+}

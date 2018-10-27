@@ -1,0 +1,93 @@
+
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<map>
+#include<string>
+#include<iomanip>
+using namespace std;
+map<string, int> amap;
+map<string, int> bmap;
+struct student {
+	string id;
+	int gp, gmid, gfinal, g;
+}stu[10005];
+
+int index = 1;
+int transfer(string id) {
+	int idn = 0;
+	if (bmap[id] == 0) {
+		bmap[id] = index;
+		idn = index;
+		index++;
+	}
+	else 
+		idn = bmap[id];
+	return idn;
+}
+bool compare(student a, student b) {
+	if (a.g > b.g)
+		return true;
+	else if (a.g == b.g) {
+		return a.id < b.id;
+	}
+	return false;
+}
+int main() {
+	int p, m, n;
+	cin >> p >> m >> n;
+	string id;
+	int score;
+	for (int i = 0; i < p; i++) {
+		cin >> id;
+		cin >> score;
+		if (score >= 200) {
+			amap[id] = score;
+			int idn = transfer(id);
+			stu[idn].gp = score;
+			stu[idn].id = id;
+			stu[idn].gfinal = -1;
+			stu[idn].gmid = -1;
+		}
+	}
+	for (int j = 0; j < m; j++) {
+		cin >> id;
+		cin >> score;
+		if (amap[id]!=0) {
+			int idn = transfer(id);
+			stu[idn].gmid = score;
+		}
+ 	}
+	for (int i = 0; i < n; i++) {
+		cin >> id;
+		cin >> score;
+		if (amap[id] != 0) {
+			int idn = transfer(id);
+			stu[idn].gfinal = score;
+		}
+	}
+	for (int i = 1; i < index; i++) {
+		double a, b;
+		string temp;
+		bool flag = false;
+		int g;
+		if (stu[i].gmid > stu[i].gfinal) {
+			g = stu[i].gmid*0.4 + stu[i].gfinal*0.6 + 0.5;
+			stu[i].g = g;
+		}
+		else {
+			stu[i].g = stu[i].gfinal;
+		}
+		stu[i].gp = amap[stu[i].id];
+	}
+	sort(stu, stu + index, compare);
+	for (int i = 0; i < index; i++) {
+		if (stu[i].g < 60) {
+			continue;
+		}
+		else {
+			cout << stu[i].id << " " << stu[i].gp << " " << stu[i].gmid << " " << stu[i].gfinal << " " << stu[i].g << endl;
+		}
+	}
+	return 0;
+}

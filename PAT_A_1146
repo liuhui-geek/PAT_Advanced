@@ -1,0 +1,52 @@
+#include<iostream>
+#include<vector>
+#include<cstring>
+using namespace std;
+
+vector<int> v[1002];
+vector<int> ans;
+int main() {
+	int n, m;
+	cin>>n>>m;
+	int a, b;
+	int push[1002];
+	int temp[1002];
+	fill(push, push + n+1, 0);
+	fill(temp, temp + n+1, 0);
+	for (int i = 0; i < m; i++) {
+		cin >> a >> b;
+		v[a].push_back(b);
+		push[b]++;
+		temp[b]++;
+	}
+	int query = 0;
+	cin>>query;
+	bool flag = false;
+	for (int i = 0; i < query; i++) {
+		for (int j = 0; j < n; j++) {
+			cin>>a;
+			if (push[a] != 0) {
+				flag = true;
+			}
+			for (auto u = v[a].begin(); u != v[a].end(); u++) {
+				push[*u]--;
+			}
+		}
+		if (flag == true) {
+			ans.push_back(i);
+		}
+		flag = false;
+		memcpy(push, temp, sizeof(temp));
+	}
+
+	int size = ans.size();
+	int asize = 0;
+	for (auto u = ans.begin(); u != ans.end(); u++) {
+		cout << *u;
+		asize++;
+		if (asize != size) {
+			cout << " ";
+		}
+	}
+	return 0;
+}

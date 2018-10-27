@@ -1,0 +1,67 @@
+#include<iostream>
+#include<map>
+#include<algorithm>
+#include<string>
+using namespace std;
+
+/*
+采用结构体加map解决此题
+*/
+struct school {             //学校信息结构体
+	int score;
+	string name;
+	int num;
+	double scoreA, scoreT, scoreB;
+}sch[100003];
+bool cmp(school a1,school a2) {           //结构体排序函数
+	if (a1.score != a2.score) return a1.score > a2.score;
+	if (a1.num != a2.num) return a1.num < a2.num;
+	return a1.name < a2.name;
+}
+map<string, int>amap;      //int用于存放该学校位于结构体中的位置
+int main() {
+	int n = 0;
+	cin >> n;           //总数
+	int id = 1;
+	string idRank, SchoolName;
+	double SchoolScore;
+	for (int i = 0; i < n; i++) {               //边读取边处理存入map和结构体中
+		cin >> idRank >> SchoolScore >> SchoolName;
+		for (int j = 0; j < SchoolName.length(); j++) {     //小写处理
+			SchoolName[j] = tolower(SchoolName[j]);
+		}
+		int loc = amap[SchoolName];         
+		if (loc == 0) {                          //判断map中是否含有该学校
+			loc = id;
+			amap[SchoolName] = id;
+			id++;
+		}
+		if (idRank[0] == 'A') {                 //分类计入分中
+			sch[loc].scoreA += SchoolScore;
+		}
+		else if (idRank[0] == 'B') {
+			sch[loc].scoreB += SchoolScore;
+		}
+		else {
+			sch[loc].scoreT += SchoolScore ;
+		}
+		sch[loc].name = SchoolName;
+		sch[loc].num++;
+	}
+	for (int i = 1; i < id; i++) {                  //计算总分
+		sch[i].score = (int)(sch[i].scoreB/1.5 + sch[i].scoreA + sch[i].scoreT*1.5);
+	}
+	sort(sch+1, sch + id, cmp);                       //结构体内容排序
+	cout << id - 1 << endl;
+	int lastRank = 1;
+	for (int i = 1; i < id; i++) {
+		if (i != 1 && sch[i].score == sch[i - 1].score) {
+			cout << lastRank<<" ";
+		}
+		else {
+			cout << (lastRank=i)<<" ";
+		}
+		cout << sch[i].name << " " << sch[i].score << " " << sch[i].num << endl;
+	}
+	return 0;
+}
