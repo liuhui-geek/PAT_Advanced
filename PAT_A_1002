@@ -1,0 +1,40 @@
+//要考虑特殊情况，加和后为0的情况
+#include<iostream>
+#include<iomanip>
+#include<map>
+using namespace std;
+
+map<int, double> amap;
+int main()
+{
+	int n = 0; 
+	int exp = 0;
+	double coe = 0;
+	for (int j = 0; j < 2; j++) {
+		cin >> n;
+		for (int i = 0; i < n; i++) {
+			cin >> exp;
+			cin >> coe;
+			amap[exp] = amap[exp] + coe;
+		}
+	}
+	
+	map<int, double>::iterator cmap = amap.begin();
+	while (cmap != amap.end()) {
+		if ((*cmap).second==0) {
+			amap.erase(cmap++);
+		}
+		else {
+			cmap++;
+		}
+		
+	}
+	cout << amap.size();
+	map<int, double>::reverse_iterator bmap = amap.rbegin();
+	while (bmap != amap.rend()) {
+		cout << " " << (*bmap).first;
+		cout << " " << fixed << setprecision(1) << (*bmap).second;
+		bmap++;
+	}
+	return 0;
+}
