@@ -1,82 +1,64 @@
 #include<iostream>
+#include<iostream>
 #include<vector>
 #include<string>
-#include<map>
 #include<algorithm>
-using namespace std;
-map<string, int> amap;
-struct stu {
-	string id;
-	int finalrank, locnum, locrank;
-	int score;
-}student[30002];
-bool calculate(stu a,stu b) {
-	if (a.score > b.score) {
-		return true;
-	}
-	if(a.score == b.score){
-		return a.id < b.id;
-	}
-	return false;
-}
 
-int index = 0;
-int transfer(string id) {
-	int idn = 0;
-	if (amap[id] == 0) {
-		amap[id] = index;
-		idn = index;
-		index++;
-	}
-	return idn;
-}
-int main() {
-	int n;
+using namespace std;
+struct tester{
 	string id;
 	int score;
-	int transferid;
-	cin >> n;
-	int sum = 0;
-	for (int i = 0; i < n; i++) {
-		int num;
-		cin >> num;
-		for (int j = 0; j < num; j++) {
-			cin >> id;
-			cin >> score;
-			transferid = transfer(id);
-			student[transferid].id = id;
-			student[transferid].score = score;
-			student[transferid].locnum = i + 1;
+	int location;
+	int finalrank,localrank;
+}user[30001],temp;
+bool cmploc(tester a,tester b){
+	if(a.score!=b.score)
+		return a.score>b.score;
+	else
+		return a.id<b.id;
+}
+int main(){
+	int n = 0;
+	int num = 0;
+	int lastnum = 0;
+	cin>>n;
+	for(int i=0;i<n;i++){
+		int m;
+		cin>>m;
+		for(int j=0;j<m;j++){
+			cin>>temp.id;
+			cin>>temp.score;
+			temp.location = i+1;
+			user[num] = temp;
+			num++;
 		}
-		sort(student + sum, student + sum + num, calculate);
-		int rank = 1;
-		student[sum].locrank = rank;
-		for (int j = sum+1; j < sum + num; j++) {
-			rank++;
-			if (student[j].score == student[j - 1].score) {
-				student[j].locrank = student[j - 1].locrank;
+		sort(user+lastnum,user+num,cmploc);
+		int locrank = 2;
+		user[lastnum].localrank = 1;
+		for(int j=lastnum+1;j<num;j++){
+			if(user[j].score==user[j-1].score){
+				user[j].localrank=user[j-1].localrank;
+			}else{
+				user[j].localrank = locrank;
 			}
-			else {
-				student[j].locrank = rank;
-			}
+			locrank++;
 		}
-		sum += num;
+		lastnum +=m;
 	}
-	sort(student, student + sum,calculate);
-	int rank = 1;
-	student[0].finalrank = rank;
-	for (int j = 1; j <  sum; j++) {
-		rank++;
-		if (student[j].score == student[j - 1].score) {
-			student[j].finalrank = student[j - 1].finalrank;
+	cout<<num<<endl;
+	int finalrank = 2;
+	sort(user,user+num,cmploc);
+	user[0].finalrank = 1;
+	cout<<user[0].id<<" "<<user[0].finalrank<<" "<<user[0].location<<" "<<user[0].localrank<<endl;
+	for(int j=1;j<num;j++){
+		if(user[j].score==user[j-1].score){
+			user[j].finalrank=user[j-1].finalrank;
+		}else{
+			user[j].finalrank = finalrank;
 		}
-		else {
-			student[j].finalrank = rank;
-		}
+		finalrank++;
+		cout<<user[j].id<<" "<<user[j].finalrank<<" "<<user[j].location<<" "<<user[j].localrank<<endl;
 	}
-	cout << sum << endl;
-	for (int i = 0; i < sum; i++) {
-		cout << student[i].id << " " << student[i].finalrank << " " << student[i].locnum << " " << student[i].locrank << endl;
-	}
+
 	return 0;
 }
