@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+#include<map>
+#include<vector>
+#include<algorithm>
+#include<queue>
+using namespace std;
+static int daycall[25];
+struct use{
+	string name;
+	int time,day,month,hour,min;
+	bool state;
+};
+bool cmp(use a,use b){
+	if(a.name!=b.name)
+		return a.name<b.name;
+	else
+		return a.time<b.time;
+}
+double billCal(use a){
+	double total = daycall[24]*60*a.day + daycall[a.hour]*a.min;
+	for(int i=0;i<a.hour;i++){
+		total += daycall[i]*60;
+	}
+	return total/100;
+}
+int main(){
+	for(int i=0;i<24;i++){
+		cin>>daycall[i];
+		daycall[24] += daycall[i];
+	}
+	int n;
+	cin>>n;
+	vector<use> custom(n);
+	//存放数据
+	for(int i=0;i<n;i++){
+		string name,time,state;
+		cin>>custom[i].name;
+		scanf("%d:%d:%d:%d",&custom[i].month,&custom[i].day,&custom[i].hour,&custom[i].min);
+		custom[i].time = custom[i].day*24*60 + custom[i].hour * 60 + custom[i].min;
+		cin>>state;
+		state=="on-line"?custom[i].state=true:custom[i].state=false;
+	}
+	//排序
+	sort(custom.begin(),custom.end(),cmp);
+	//找出合理的数据
+	//判断相连的数据是否合理
+	map<string,vector<use>> ans;
+	for(int i=1;i<n;i++){
+		if(custom[i].name==custom[i-1].name){
+			if(custom[i-1].state==true&&custom[i].state==false){
+				ans[custom[i-1].name].push_back(custom[i-1]);
+				ans[custom[i-1].name].push_back(custom[i]);
+			}
+		}
+	}
+	//从map中取出数据，然后计算输出结果
+	for(auto it = ans.begin();it!=ans.end();it++){
+		vector<use> temp = it->second;
+		cout<<it->first<<" ";
+		printf("%02d\n",temp[0].month);
+		double sum = 0;
+		for(int i=1;i<temp.size();i=i+2){
+			//计算每小时的费用
+			double t = billCal(temp[i])-billCal(temp[i-1]);
+			printf("%02d:%02d:%02d %02d:%02d:%02d %d $%.2f\n",temp[i-1].day,temp[i-1].hour,temp[i-1].min,temp[i].day,temp[i].hour,temp[i].min,temp[i].time-temp[i-1].time,t);
+			sum = sum+t;
+		}
+		printf("Total amount: $%.2f\n", sum);
+
+	}
+	return 0;
+}
