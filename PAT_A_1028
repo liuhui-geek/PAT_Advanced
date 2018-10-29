@@ -1,0 +1,49 @@
+#include<iostream>
+#include<string>
+#include<string.h>
+#include<algorithm>
+#include<vector>
+using namespace std;
+struct student{
+	char name[10];
+	int id;
+	int score;
+};
+vector<student> ans; 
+bool cmp1(student a,student b){
+	return a.id<b.id;
+}
+bool cmp2(student a,student b){
+	if(strcmp(a.name,b.name)==0)
+		return a.id<b.id;
+	else
+		return strcmp(a.name,b.name)<=0;
+}
+bool cmp3(student a,student b){
+	if(a.score!=b.score)
+		return a.score<b.score;
+	else
+		return a.id<b.id;
+}
+int main(){
+	int n,c;
+	cin>>n>>c;
+	student temp;
+	for(int i=0;i<n;i++){
+		scanf("%d %s %d", &temp.id, temp.name, &temp.score);
+		ans.push_back(temp);
+	}
+	if(c==1){
+		sort(ans.begin(),ans.end(),cmp1);
+	}else if(c==2){
+		sort(ans.begin(),ans.end(),cmp2);
+	}else{
+		sort(ans.begin(),ans.end(),cmp3);
+	}
+	for(auto it= ans.begin();it!=ans.end();it++){
+		printf("%06d ",it->id);
+		cout<<it->name<<" "<<it->score<<endl;
+	}
+	return 0;
+
+}
