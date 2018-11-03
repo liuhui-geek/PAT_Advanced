@@ -1,0 +1,44 @@
+#include<iostream>
+#include<string>
+#include<string.h>
+#include<algorithm>
+using namespace std;
+struct people{
+	string name;
+	int age,worth;
+}use[100002];
+bool cmp(people a,people b){
+	if(a.worth!=b.worth)
+		return a.worth>b.worth;
+	else if(a.age!=b.age)
+		return a.age<b.age;
+	else
+		return a.name<b.name;
+}
+int main(){
+	int n,m;
+	cin>>n>>m;
+	for(int i=0;i<n;i++){
+		cin>>use[i].name;
+		scanf("%d %d",&use[i].age,&use[i].worth);
+	}
+	
+	sort(use,use+n,cmp);
+	for(int i=0;i<m;i++){
+		int num = 0,minage,maxage;
+		int flag = 1;
+		scanf("%d %d %d",&num,&minage,&maxage);
+		cout<<"Case #"<<i+1<<":"<<endl;
+		for(int j=0;j<n;j++){
+			if(use[j].age>=minage&&use[j].age<=maxage&&flag<=num){
+				cout<<use[j].name<<" "<<use[j].age<<" "<<use[j].worth<<endl;
+				flag++;
+			}else if(flag>num)
+				break;
+		}
+		if(flag==1){
+			cout<<"None"<<endl;
+		}
+	}
+	return 0;
+}
