@@ -1,0 +1,38 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+using namespace std;
+struct student {
+	string name,id;
+	int grade;
+
+};
+bool cmp(student a, student b) {
+	return a.grade > b.grade;
+}
+int main() {
+	int n = 0;
+	cin >> n;
+	vector<student> use(n);
+	for (int i = 0; i < n; i++) {
+		cin >> use[i].name >> use[i].id;
+		cin >> use[i].grade;
+	}
+	int min, max;
+	cin >> min >> max;
+	vector<student> ans;
+	for (auto it = use.begin(); it != use.end(); it++) {
+		if ((*it).grade >= min&&(*it).grade <= max)
+			ans.push_back(*it);
+	}
+	if (ans.size() == 0)
+		cout << "NONE";
+	else {
+		sort(ans.begin(), ans.end(), cmp);
+		for (auto it = ans.begin(); it != ans.end(); it++) {
+			cout << (*it).name << " " << (*it).id << endl;
+		}
+	}
+	return 0;
+}
