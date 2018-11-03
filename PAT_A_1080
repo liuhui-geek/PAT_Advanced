@@ -1,0 +1,93 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<set>
+using namespace std;
+//定义人员
+struct student {
+	int id;
+	int e, i, total;
+	int rank;
+	int result;
+	vector<int> admit;     //志愿
+};
+//排序函数
+bool cmp(student a, student b) {
+	if (a.total != b.total)
+		return a.total>b.total;
+	else if (a.e != b.e)
+		return a.e>b.e;
+	else
+		return a.id<b.id;
+}
+int main() {
+	int n, m, k;
+	int rest = 0;
+	cin >> n >> m >> k;
+	vector<int> school(m);      //存放学校容量
+	vector<set<int>> ans(m);    //存放每个学校的结果
+	vector<student> use(n);     //存放输入数据
+	for (int i = 0; i<m; i++) {
+		cin >> school[i];
+	}
+	//为每个成员的志愿分配空间
+	for (int i = 0; i<n; i++) {
+		use[i].admit.resize(k);
+	}
+	for (int i = 0; i<n; i++) {
+		use[i].id = i;
+		cin >> use[i].e >> use[i].i;
+		for (int j = 0; j<k; j++) {
+			cin >> use[i].admit[j];
+		}
+		use[i].total = use[i].e + use[i].i;
+	}
+	//根据总分排序
+	sort(use.begin(), use.end(), cmp);
+	use[0].rank = 1;
+	//等级
+	for (int i = 1; i<n; i++) {
+		if (use[i].total == use[i - 1].total&&use[i].e == use[i - 1].e)
+			use[i].rank = use[i - 1].rank;
+		else
+			use[i].rank = i + 1;
+	}
+	//核心算法
+	for (int i = 0; i<n; i++) {
+		for (int j = 0; j<k; j++) {
+			//如果学校还有容量
+			if (school[use[i].admit[j]]>0) {
+				//将该学生放入ans中
+				ans[use[i].admit[j]].insert(use[i].id);
+				//容量减
+				school[use[i].admit[j]]--;
+				//将结果放入学生结点中
+				use[i].result = use[i].admit[j];
+				break;
+			}
+			//判断相同志愿，相同等级的学生
+			else if ((i != -1) && (use[i].rank == use[i - 1].rank) && use[i - 1].result == use[i].admit[j]) {
+				ans[use[i].admit[j]].insert(use[i].id);
+				use[i].result = use[i].admit[j];
+				break;
+			}
+		}
+	}
+	//输出结果
+	for (int i = 0; i<m; i++) {
+		if (ans[i].size() == 0)
+			cout << endl;
+		else {
+			for (auto find = ans[i].begin(); find != ans[i].end();find++) {
+				if (find != ans[i].begin())
+					cout << " ";
+				cout << *find;
+				
+			}
+			cout << endl;
+		}
+		
+	}
+	return 0;
+}
