@@ -1,0 +1,62 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+using namespace std;
+struct people{
+	string name;
+	int vir,tal,total;
+};
+bool cmp(people a,people b){
+	if(a.total!=b.total)
+		return a.total>b.total;
+	else if(a.vir!=b.vir)
+		return a.vir>b.vir;
+	else
+		return a.name<b.name;
+}
+vector<people> sages,nobleman,fool,rest;
+int main(){
+	int n,minscore,maxscore;
+	cin>>n>>minscore>>maxscore;
+	int num = 0;
+	for(int i=0;i<n;i++){
+		string name;
+		people temp;
+		int vir,tal;
+		int flag = 0;
+		cin>>temp.name;
+		cin>>temp.vir>>temp.tal;
+		temp.total = temp.vir+temp.tal;
+		if(temp.tal<minscore||temp.vir<minscore)
+			continue;
+		if(temp.vir>=maxscore&&temp.tal>=maxscore){
+			sages.push_back(temp);
+		}else if(temp.tal<maxscore&&temp.vir>=maxscore){
+			nobleman.push_back(temp);
+		}else if(temp.tal<maxscore&&temp.vir<maxscore&&temp.vir>=temp.tal){
+			fool.push_back(temp);
+		}else {
+			rest.push_back(temp);
+		}
+		num++;
+	}
+	sort(sages.begin(),sages.end(),cmp);
+	sort(nobleman.begin(),nobleman.end(),cmp);
+	sort(fool.begin(),fool.end(),cmp);
+	sort(rest.begin(),rest.end(),cmp);
+	cout<<num<<endl;
+	for(auto it = sages.begin();it!=sages.end();it++){
+		cout<<it->name<<" "<<it->vir<<" "<<it->tal<<endl;
+	}
+	for(auto it = nobleman.begin();it!=nobleman.end();it++){
+		cout<<it->name<<" "<<it->vir<<" "<<it->tal<<endl;
+	}
+	for(auto it = fool.begin();it!=fool.end();it++){
+		cout<<it->name<<" "<<it->vir<<" "<<it->tal<<endl;
+	}
+	for(auto it = rest.begin();it!=rest.end();it++){
+		cout<<it->name<<" "<<it->vir<<" "<<it->tal<<endl;
+	}
+	return 0;
+}
