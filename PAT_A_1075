@@ -1,0 +1,85 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+struct people {
+  int id,goodnum,totalscore;
+  bool show;
+  int rank;
+  vector<int> problem;
+};
+bool cmp(people a,people b){
+	if(a.totalscore!=b.totalscore)
+		return a.totalscore>b.totalscore;
+	else if(a.goodnum!=b.goodnum)
+		return a.goodnum>b.goodnum;
+	else
+		return a.id<b.id;
+}
+int main(){
+  int n = 0,k = 0,m = 0;
+  int score;
+  cin>>n>>k>>m;
+  vector<people> use(n+1);
+  vector<int> proscore(k+1);
+  for(int i=1;i<=k;i++){
+    cin>>score;
+    proscore[i] = score;
+  }
+  //给每个成员问题初始化赋值为-1
+  for(int i=1;i<=n;i++){
+    use[i].problem.resize(k+1,-1);
+	use[i].totalscore = 0;
+	use[i].show = false;
+  }
+  //输入成员分数
+  for(int i=0;i<m;i++){
+    int id,problemid,problemscore;
+	cin>>id>>problemid>>problemscore;
+	use[id].id = id;
+	if(use[id].problem[problemid]<problemscore)
+		use[id].problem[problemid] = problemscore;
+	if(problemscore!=-1)
+		use[id].show = true;
+	else if(use[id].problem[problemid]==-1)
+		use[id].problem[problemid] = -2;
+  }
+  
+  for(int i=1;i<=n;i++){
+	  for(int j=1;j<=k;j++){
+		  //求综合分数
+		if(use[i].problem[j]!=-1&&use[i].problem[j]!=-2){
+			use[i].totalscore += use[i].problem[j]; 
+		}
+		//求满分的个数
+		if(use[i].problem[j]==proscore[j])
+			use[i].goodnum++;
+	  }
+  }
+  //根据总分排序
+  sort(use.begin()+1,use.end(),cmp);
+  int rank = 1;
+  int lastrank = 1;
+  for(int i=1;i<=n;i++){
+	use[i].rank = i;
+	if(i != 1 && use[i].totalscore == use[i - 1].totalscore)
+            use[i].rank = use[i - 1].rank;
+  }
+  for(int i = 1; i <= n; i++) {
+	 if(use[i].show == true) {
+		printf("%d %05d %d", use[i].rank, use[i].id, use[i].totalscore);
+		for(int j=1;j<=k;j++){
+			if(use[i].problem[j]!=-2&&use[i].problem[j]!=-1)
+				cout<<" "<<use[i].problem[j];
+			else if(use[i].problem[j]==-1)
+				cout<<" -";
+			else
+				cout<<" 0";
+		}
+		cout<<endl;
+	}
+  }
+  return 0;
+}
