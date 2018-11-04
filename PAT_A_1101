@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <map>
+#include<set>
+using namespace std;
+//方法一：计算两个序列，maxloc为当前元素之前的最大值，minloc为当前元素之后的最小值。只要满足即可；
+//方法二：排序原序列后比较，位置不变且该位置之前的元素最大值小于当前元素即为主元
+int main(){
+	int n;
+	cin >> n;
+	vector<int> ans(n), maxloc(n), minloc(n);
+	cin >> ans[0];
+	int max = ans[0];
+	maxloc[0] = max;
+	for (int i = 1; i < n; i++) {
+		cin >> ans[i];
+		if (ans[i] > max) {
+			maxloc[i] = ans[i];
+			max = ans[i];
+		}
+		else {
+			maxloc[i] = max;
+		}
+	}
+	int min = ans[n - 1];
+	for (int i = n-1; i >= 0; i--) {
+		if (ans[i] < min) {
+			minloc[i] = ans[i];
+			min = ans[i];
+		}
+		else {
+			minloc[i] = min;
+		}
+	}
+	set<int> temp;
+	int num = 0;
+	if (n == 1) {
+		cout << 1 << endl;
+		cout << ans[0];
+	}
+	else {
+		if (minloc[1] >= ans[0]) {
+			temp.insert(ans[0]);
+			num++;
+		}
+		if (maxloc[n - 2] <= ans[n - 1]){
+			temp.insert(ans[n-1]);
+			num++;
+		}
+		for (int i = 1; i < n - 1; i++) {
+			if (maxloc[i - 1] <= ans[i] && minloc[i + 1] >= ans[i]) {
+				temp.insert(ans[i]);
+				num++;
+			}
+		}
+	}
+	cout << num << endl;
+	if (num != 0) {
+		set<int>::iterator it = temp.begin();
+		cout << *it;
+		it++;
+		for (; it != temp.end(); it++) {
+			cout << " " << *it;
+		}
+	}
+	else {
+		cout << endl;
+	}
+	
+	return 0;
+}
