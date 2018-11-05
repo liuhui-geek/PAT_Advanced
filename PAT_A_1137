@@ -1,92 +1,69 @@
-
 #include<iostream>
 #include<vector>
+#include<string>
 #include<algorithm>
 #include<map>
-#include<string>
-#include<iomanip>
 using namespace std;
-map<string, int> amap;
-map<string, int> bmap;
-struct student {
+struct student{
 	string id;
-	int gp, gmid, gfinal, g;
-}stu[10005];
-
-int index = 1;
-int transfer(string id) {
-	int idn = 0;
-	if (bmap[id] == 0) {
-		bmap[id] = index;
-		idn = index;
-		index++;
+	int gmid,gfin,gp,g;
+};
+map<string,int> amap;
+int num = 1;
+int transfer(string a){
+	if(amap[a]==0){
+		amap[a] = num;
+		num++;
 	}
-	else 
-		idn = bmap[id];
-	return idn;
+	return amap[a];
 }
-bool compare(student a, student b) {
-	if (a.g > b.g)
-		return true;
-	else if (a.g == b.g) {
-		return a.id < b.id;
-	}
-	return false;
+bool cmp(student a,student b){
+	if(a.g!=b.g)
+		return a.g>b.g;
+	else
+		return a.id<b.id;
 }
-int main() {
-	int p, m, n;
-	cin >> p >> m >> n;
+int main(){
+	int p,m,n,g;
+	cin>>p>>m>>n;
 	string id;
-	int score;
-	for (int i = 0; i < p; i++) {
-		cin >> id;
-		cin >> score;
-		if (score >= 200) {
-			amap[id] = score;
-			int idn = transfer(id);
-			stu[idn].gp = score;
-			stu[idn].id = id;
-			stu[idn].gfinal = -1;
-			stu[idn].gmid = -1;
-		}
-	}
-	for (int j = 0; j < m; j++) {
-		cin >> id;
-		cin >> score;
-		if (amap[id]!=0) {
-			int idn = transfer(id);
-			stu[idn].gmid = score;
-		}
- 	}
-	for (int i = 0; i < n; i++) {
-		cin >> id;
-		cin >> score;
-		if (amap[id] != 0) {
-			int idn = transfer(id);
-			stu[idn].gfinal = score;
-		}
-	}
-	for (int i = 1; i < index; i++) {
-		double a, b;
-		string temp;
-		bool flag = false;
-		int g;
-		if (stu[i].gmid > stu[i].gfinal) {
-			g = stu[i].gmid*0.4 + stu[i].gfinal*0.6 + 0.5;
-			stu[i].g = g;
-		}
-		else {
-			stu[i].g = stu[i].gfinal;
-		}
-		stu[i].gp = amap[stu[i].id];
-	}
-	sort(stu, stu + index, compare);
-	for (int i = 0; i < index; i++) {
-		if (stu[i].g < 60) {
+	vector<student> ans(10000);
+	for(int i=0;i<p;i++){
+		cin>>id;
+		cin>>g;
+		if(g<200)
 			continue;
-		}
-		else {
-			cout << stu[i].id << " " << stu[i].gp << " " << stu[i].gmid << " " << stu[i].gfinal << " " << stu[i].g << endl;
+		int num = transfer(id);
+		ans[num].gp = g;
+		ans[num].id = id;
+		ans[num].gfin = -1;
+		ans[num].gmid = -1;
+	}
+	for(int i=0;i<m;i++){
+		cin>>id;
+		cin>>g;
+		if(amap[id]==0)
+			continue;
+		ans[amap[id]].gmid = g;
+	}
+	for(int i=0;i<n;i++){
+		cin>>id;
+		cin>>g;
+		if(amap[id]==0)
+			continue;
+		ans[amap[id]].gfin = g;
+	}
+	for(int i=1;i<num;i++){
+		if(ans[i].gmid>ans[i].gfin)
+			ans[i].g = ans[i].gmid*0.4+ans[i].gfin*0.6+0.5;
+		else
+			ans[i].g = ans[i].gfin;
+	}
+	sort(ans.begin()+1,ans.begin()+num,cmp);
+	for(int i=1;i<num;i++){
+		if(ans[i].g>=60&&ans[i].g<=100)
+		{
+			cout<<ans[i].id<<" "<<ans[i].gp<<" "<<ans[i].gmid<<" "<<ans[i].gfin<<" "<<ans[i].g<<endl;
 		}
 	}
 	return 0;
