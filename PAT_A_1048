@@ -1,0 +1,27 @@
+#include<iostream>
+#include<map>
+using namespace std;
+
+int main(){
+	int n,m;
+	cin>>n>>m;
+	int a,temp;
+	map<int,bool> ans;
+	int min = 1000;
+	for(int i=0;i<n;i++){
+		cin>>a;
+		if(ans[m-a]==true){
+			(a<(m-a))?temp = a:temp = m-a;
+				if(temp<min)
+					min = temp;
+		}
+		ans[a] = true;
+	}
+	if(min==1000)
+		cout<<"No Solution";
+	else{
+		int v2 = m-min;
+		cout<<min<<" "<<v2;
+	}
+	return 0;
+}
