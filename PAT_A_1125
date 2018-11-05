@@ -1,0 +1,63 @@
+1#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+struct tester{
+	string id;
+	int score;
+	int location;
+	int finalrank,localrank;
+}user[30001],temp;
+bool cmploc(tester a,tester b){
+	if(a.score!=b.score)
+		return a.score>b.score;
+	else
+		return a.id<b.id;
+}
+int main(){
+	int n = 0;
+	int num = 0;
+	int lastnum = 0;
+	cin>>n;
+	for(int i=0;i<n;i++){
+		int m;
+		cin>>m;
+		for(int j=0;j<m;j++){
+			cin>>temp.id;
+			cin>>temp.score;
+			temp.location = i+1;
+			user[num] = temp;
+			num++;
+		}
+		sort(user+lastnum,user+num,cmploc);
+		int locrank = 2;
+		user[lastnum].localrank = 1;
+		for(int j=lastnum+1;j<num;j++){
+			if(user[j].score==user[j-1].score){
+				user[j].localrank=user[j-1].localrank;
+			}else{
+				user[j].localrank = locrank;
+			}
+			locrank++;
+		}
+		lastnum +=m;
+	}
+	cout<<num<<endl;
+	int finalrank = 2;
+	sort(user,user+num,cmploc);
+	user[0].finalrank = 1;
+	cout<<user[0].id<<" "<<user[0].finalrank<<" "<<user[0].location<<" "<<user[0].localrank<<endl;
+	for(int j=1;j<num;j++){
+		if(user[j].score==user[j-1].score){
+			user[j].finalrank=user[j-1].finalrank;
+		}else{
+			user[j].finalrank = finalrank;
+		}
+		finalrank++;
+		cout<<user[j].id<<" "<<user[j].finalrank<<" "<<user[j].location<<" "<<user[j].localrank<<endl;
+	}
+
+	return 0;
+}
