@@ -1,0 +1,26 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int main(){
+	int n;
+	cin>>n;
+	int sum[100002] = {0};
+	vector<int> an;
+	int num = 0;
+	for(int i=0;i<n;i++){
+		cin>>num;
+		an.push_back(num);
+		sum[num]++;
+	}
+	for(int i=0;i<an.size();i++){
+		if(sum[an[i]]==1){
+			cout<<an[i];
+			return 0;
+		}
+	}
+	cout<<"None";
+	return 0;
+}
