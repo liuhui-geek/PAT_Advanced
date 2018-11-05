@@ -65,3 +65,78 @@ int main() {
 	}
 	return 0;
 }
+
+
+//方法二
+#include<iostream>
+#include<string>
+#include<string.h>
+#include<algorithm>
+#include<cctype>
+#include<map>
+using namespace std;
+struct student{
+	string id;
+	int score;
+	int ns;
+	int rank;
+}use[100002];
+map<string ,int> amap;
+map<int,string> bmap;
+int num = 1;
+int transfer(string id){
+	if(amap[id]==0){
+		amap[id] = num;
+		num++;
+	}
+	return amap[id];
+}
+bool cmp(student a,student b){
+	if(a.score!=b.score)
+		return a.score>b.score;
+	else if(a.ns!=b.ns)
+		return a.ns<b.ns;
+	else
+		return a.id<b.id;
+}
+map<string,double> sc;
+int main(){
+	int n;
+	cin>>n;
+	string level,id;
+	double score;
+	for(int i=0;i<n;i++){
+		cin>>level;
+		cin>>score;
+		cin>>id;
+		transform(id.begin(), id.end(), id.begin(), ::tolower);	
+		int aid = transfer(id);
+		use[aid].ns++;
+		use[aid].id = id;
+		if(level[0]=='A')
+			sc[id] += score;
+		else if(level[0]=='B')
+			sc[id] += score/1.5;
+		else
+			sc[id] += score*1.5;
+	}
+	cout<<num-1<<endl;
+	for(auto it = sc.begin();it!=sc.end();it++){
+		use[transfer((*it).first)].score = (int)(*it).second;
+	}
+	sort(use+1,use+num,cmp);
+	int rank = 1;
+	use[1].rank = 1;
+	cout<<1<<" "<<use[1].id<<" "<<use[1].score<<" "<<use[1].ns<<endl;
+	for(int i=2;i<num;i++){
+		if(use[i].score==use[i-1].score){
+			cout<<use[i-1].rank<<" "<<use[i].id<<" "<<use[i].score<<" "<<use[i].ns<<endl;
+			use[i].rank = use[i-1].rank;
+		}else{
+			cout<<i<<" "<<use[i].id<<" "<<use[i].score<<" "<<use[i].ns<<endl;
+			use[i].rank = i;
+		}
+			
+	}
+	return 0;
+}
