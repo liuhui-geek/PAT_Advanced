@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string>
+#include<vector>
+#include <algorithm>
+using namespace std;
+struct node {
+	double sum, price, unit;
+};
+bool cmp(node a, node b) {
+	return a.unit > b.unit;
+}
+int main() {
+	int n,need;
+	cin>>n>>need;
+	vector<node> ans(n);
+	for (int i = 0; i < n; i++)
+		cin >> ans[i].sum;
+	for (int i = 0; i < n; i++)
+		cin >> ans[i].price;
+	for (int i = 0; i < n; i++)
+		ans[i].unit = ans[i].price/ans[i].sum;
+	sort(ans.begin(), ans.end(), cmp);
+	double price = 0;
+	for (int i = 0; i < n; i++) {
+		if (need > ans[i].sum) {
+			price += ans[i].price;
+		}
+		else {
+			price += need*ans[i].unit;
+			break;
+		}
+		need -= ans[i].sum;
+	}
+	printf("%.2f", price);
+	return 0;
+}
