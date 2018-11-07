@@ -1,0 +1,66 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+using namespace std;
+struct node {
+	double price;
+	int distance;
+}state[502];
+bool cmp(node a,node b) {
+	if (a.distance != b.distance)
+		return a.distance < b.distance;
+	else
+		return a.price < b.price;
+}
+int main() {
+	int maxtank, totaldis, avgdis, stations;
+	cin >> maxtank >> totaldis >> avgdis >> stations;
+	state[0].distance = totaldis;
+	state[0].price = 0.0;
+	for (int i = 1; i <= stations; i++) {
+		cin >> state[i].price;
+		cin >> state[i].distance;
+	}
+	sort(state, state + stations + 1, cmp);
+	if (state[0].distance != 0) {
+		cout << "The maximum travel distance = 0.00";
+		return 0;
+	}
+	double curgas = 0, totalprice = 0;
+	double curprice = state[0].price,curdis = state[0].distance;
+	while (curdis<totaldis) {
+		int flag = 0;
+		double minprice = 99999,mindis = 99999;
+		double curmaxdis = curdis + maxtank*avgdis;
+		for (int i = 1; i <= stations&&state[i].distance <= curmaxdis; i++) {
+			if (state[i].distance <= curdis)
+				continue;
+			if (state[i].price < curprice) {
+				totalprice += ((state[i].distance - curdis) / avgdis - curgas)*curprice;
+				curdis = state[i].distance;
+				curprice = state[i].price;
+				curgas = 0;
+				flag = 1;
+				break;
+			}
+			else if (state[i].price < minprice) {
+				minprice = state[i].price;
+				mindis = state[i].distance;
+			}
+		}
+		if (flag == 0 && minprice == 99999) {
+			curdis += maxtank*avgdis;
+			printf("The maximum travel distance = %.2f", curdis);
+			return 0;
+		}
+		if (flag == 0 && minprice != 99999) {
+			totalprice += ( maxtank - curgas)*curprice;
+			curgas = maxtank - (mindis-curdis)/avgdis;
+			curdis = mindis;
+			curprice = minprice;
+		}
+	}
+	printf("%.2f", totalprice);
+	return 0;
+}
