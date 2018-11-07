@@ -1,0 +1,83 @@
+//方法一
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+#include<sstream>
+using namespace std;
+struct test {
+	int id;
+	string num;
+};
+bool cmp(test a,test b) {
+	for (int i = 0; i < 8; i++) {
+		if (a.num[i] != b.num[i])
+			return a.num[i] < b.num[i];
+	}
+	return a.num<b.num;
+}
+int main() {
+	int n;
+	cin >> n;
+	vector<test> ans(n),temp;
+	for (int i = 0; i < n; i++) {
+		cin >> ans[i].num;
+		ans[i].id = i;
+	}
+	test a;
+	for (int i = 0; i < n; i++) {
+		a = ans[i];
+		int length = 8 - ans[i].num.length();
+		int j = 0;
+		for (int k = 0; k < length; k++) {
+			a.num += a.num[j];
+			j++;
+			j = j%ans[i].num.length();
+		}
+			
+		temp.push_back(a);
+	}
+	sort(temp.begin(), temp.end(), cmp);
+	string total;
+	for (int i = 0; i < n; i++) {
+		total += ans[temp[i].id].num;
+	}
+	bool flag = false;
+	for (int i = 0; i < total.length(); i++) {
+		if (total[i] == '0'&&flag == false) {
+			continue;
+		}
+		else {
+			cout << total[i];
+			flag = true;
+		}
+	}
+	if (flag == false)
+		cout << 0;
+	return 0;
+}
+
+//方法二
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+bool cmp0(string a, string b) {
+	return a + b < b + a;
+}
+string str[10010];
+int main() {
+	int n;
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++)
+		cin >> str[i];
+	sort(str, str + n, cmp0);
+	string s;
+	for (int i = 0; i < n; i++)
+		s += str[i];
+	while (s.length() != 0 && s[0] == '0')
+		s.erase(s.begin());
+	if (s.length() == 0) cout << 0;
+	cout << s;
+	return 0;
+}
