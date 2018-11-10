@@ -1,0 +1,60 @@
+#include<iostream>
+#include<set>
+#include<algorithm>
+//1089
+using namespace std;
+set<int> temp;
+int main() {
+	int n;
+	cin >> n;
+	int a[102], b[102];
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &a[i]);
+	}
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &b[i]);
+	}
+	int i, j;
+	//找到第一个不相等的位置，然后比较；
+	for (i = 0; i < n - 1 && b[i] <= b[i + 1]; i++);
+	for (j = i + 1; a[j] == b[j] && j < n; j++);
+	if (j == n) {
+		cout << "Insertion Sort" << endl;
+		sort(a, a + i + 2);
+	}
+	else {
+		cout << "Merge Sort" << endl;
+		int step = 1;
+		bool flag = true;
+		while (flag) {
+			flag = false;
+			//判断两个数组是否相等
+			for (int j = 0; j < n; j++) {
+				if (a[j] != b[j]) {
+					flag = true;              //true代表数组不相等；
+					break;
+				}
+			}
+			//归并排序
+			for (int i = 0; i < n; i = i + step) {
+				if (step + i > n) {
+					sort(a + i, a + n);
+				}
+				else {
+					sort(a + i, a + step + i);
+				}
+			}
+			step = step * 2;
+			if (step > n)
+				step = n;
+		}
+	}
+	//输出结果
+	for (int k = 0; k < n; k++) {
+		if (k == 0)
+			cout << a[k];
+		else
+			cout << " " << a[k];
+	}
+	return 0;
+}
