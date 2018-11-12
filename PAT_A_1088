@@ -1,0 +1,78 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+//1088
+using namespace std;
+long long gcd(long long a, long long b) {
+	return b == 0 ? abs(a) : gcd(b, a%b);
+}
+void tran(long long &x, long long &y) {
+	int gcdval = gcd(x, y);
+	x /= gcdval;
+	y /= gcdval;
+}
+void fun(long long a, long long b) {
+	if (b == 0) {
+		printf("Inf");
+		return;
+	}
+	if (a == 0) {
+		printf("0");
+		return;
+	}
+	if (a < 0) {
+		if (abs(a) >= b) {
+			if (b == 1)
+				cout << "(" << a << ")";
+			else
+				cout << "(-" << abs(a) / b << " " << abs(a) % b << "/" << b << ")";
+		}
+		else
+			cout << "(" << a << "/" << b << ")";
+	}
+	else {
+		if (a >= b) {
+			if (b == 1)
+				cout << a;
+			else
+				cout << a / b << " " << a % b << "/" << b;
+		}
+		else
+			cout << a << "/" << b;
+	}
+}
+int main() {
+	long long a, b, aa, bb, aaa, bbb, gcdval;
+	scanf("%lld/%lld %lld/%lld", &a, &b, &aa, &bb);
+	tran(a, b);
+	tran(aa, bb);
+	//加法
+	aaa = a * bb + b * aa;
+	bbb = b * bb;
+	tran(aaa, bbb);
+	fun(a, b);     cout << " + ";    fun(aa, bb);     cout << " = ";    fun(aaa, bbb);   cout << endl;
+	//减法
+	aaa = a * bb - b * aa;
+	bbb = b * bb;
+	tran(aaa, bbb);
+	fun(a, b);     cout << " - ";    fun(aa, bb);     cout << " = ";    fun(aaa, bbb);   cout << endl;
+	//乘法
+	aaa = a * aa;
+	bbb = b * bb;
+	tran(aaa, bbb);
+	fun(a, b);     cout << " * ";    fun(aa, bb);     cout << " = ";    fun(aaa, bbb);   cout << endl;
+	//除法
+	aaa = a * bb;
+	bbb = b * aa;
+	tran(aaa, bbb);
+	if (bbb < 0) {
+		aaa = -aaa;
+		bbb = -bbb;
+	}
+	fun(a, b);     cout << " / ";    fun(aa, bb);     cout << " = ";
+	if (aa == 0 || bbb == 0)
+		cout << "Inf";
+	else
+		fun(aaa, bbb);
+	cout << endl;
+}
