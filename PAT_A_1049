@@ -1,0 +1,24 @@
+#include<iostream>
+#include<set>
+#include<algorithm>
+//1049
+using namespace std;
+
+int main() {
+	int n,left = 0,right = 0,a = 1,ans = 0,now = 1;
+	cin >> n;
+	while (n / a) {
+		left = n / (a * 10);
+		right = n % a;
+		now = n / a % 10;
+		if (now == 0)
+			ans += left * a;
+		else if (now == 1)
+			ans += left * a + right + 1;
+		else
+			ans += (left + 1)*a;
+		a = a * 10;
+	}
+	cout << ans;
+	return 0;
+}
