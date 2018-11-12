@@ -1,0 +1,41 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+//1081
+using namespace std;
+long long gcd(long long a,long long b) {
+	long long minnum = min(a, b);
+	for (int i = minnum; i >= 1; i--) {
+		if (a%i == 0 && b%i == 0) {
+			return i;
+		}
+	}
+}
+int main() {
+	long long n,numer,deno,lastnum = 0,lastdeno = 1, gcdval;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		scanf("%lld/%lld", &numer, &deno);
+		gcdval = gcd(numer, deno);
+		numer /= gcdval;
+		deno /= gcdval;
+		lastnum = lastnum * deno + numer * lastdeno;
+		lastdeno *= deno;
+		gcdval = gcd(lastnum, lastdeno);
+		lastnum /= gcdval;
+		lastdeno /= gcdval;
+	}
+	if (lastnum==0||lastdeno==0) {
+		cout << 0;
+	}
+	else if (lastnum%lastdeno == 0) {
+		cout << lastnum / lastdeno;
+	}
+	else if (lastnum > lastdeno) {
+		cout << lastnum / lastdeno << " " << lastnum % lastdeno << "/" << lastdeno;
+	}
+	else {
+		cout << lastnum << "/" << lastdeno;
+	}
+	return 0;
+}
