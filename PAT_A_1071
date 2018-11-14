@@ -1,0 +1,46 @@
+#include<iostream>
+#include<algorithm>
+#include<string>
+#include<map>
+#include<cctype>
+#include<math.h>
+//1071
+using namespace std;
+int main() {
+	string a,b;
+	getline(cin,a);
+	transform(a.begin(), a.end(), a.begin(), ::tolower);
+	map<string, int> ans;
+	bool flag = false,flag1 = false;
+	int ff = 0, gg = 0;
+	for (int i = 0; i < a.length(); i++) {
+		if (flag == true) {
+			if (isdigit(a[i]) || isalpha(a[i]))
+			{
+				flag = false;
+				ff = i;
+			}
+		}
+		if (!isdigit(a[i])&&!isalpha(a[i])&&flag==false) {
+			b = a.substr(ff, gg - ff + 1);
+			flag = true;
+			ans[b]++;
+		}
+		else if(i == a.length() - 1&&flag==false){
+			b = a.substr(ff, gg - ff + 1);
+			ans[b]++;
+		}
+		else {
+			gg = i;
+		}
+	}
+	int max = 0;
+	for (auto it = ans.begin(); it != ans.end(); it++) {
+		if (it->second > max) {
+			max = it->second;
+			b = it->first;
+		}
+	}
+	cout << b << " " << max;
+	return 0;
+}
