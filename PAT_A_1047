@@ -1,38 +1,32 @@
-#include<vector>
 #include<iostream>
+#include<string>
+#include<algorithm>
+#include<string.h>
+#include<vector>
 #include<set>
+//1047
 using namespace std;
-//1120
+char a[40002][5];
+bool cmp(int b,int c){
+	return strcmp(a[b],a[c])<0;
+}
 int main(){
- int n,man,woman,num;
- int a[100003];
- bool b[100003];
- fill(a,a+100002,-1);
- cin>>n;
- set<int> ans;
- vector<int> temp;
- for(int i=0;i<n;i++){
-	cin>>man>>woman;
-	a[man] = woman;
-	a[woman] = man;
- }
- cin>>n;
- for(int i=0;i<n;i++){
-	cin>>num;
-	temp.push_back(num);
-	b[num] = true;
- }
- for(int i=0;i<n;i++){
-	if(a[temp[i]]==-1||(b[a[temp[i]]]!=true)){
-		ans.insert(temp[i]);
+	int n,k,num,course;
+	scanf("%d %d",&n,&k);
+	vector<vector<int>> ans(k+1);
+	for(int i=0;i<n;i++){
+		scanf("%s %d",a[i],&num);
+		for(int j=0;j<num;j++){
+			scanf("%d",&course);
+			ans[course].push_back(i);
+		}
 	}
- }
- cout<<ans.size()<<endl;
- for(auto it = ans.begin();it!=ans.end();it++){
-	 if(it==ans.begin())
-		 printf("%05d",*it);
-	 else
-		 printf(" %05d",*it);
- }
-  return 0;
+	for(int i=1;i<=k;i++){
+	  printf("%d %d\n",i,ans[i].size());
+		sort(ans[i].begin(),ans[i].end(),cmp);
+		for(int j=0;j<ans[i].size();j++){
+		  printf("%s\n",a[ans[i][j]]);
+		}
+	}
+	return 0;
 }
