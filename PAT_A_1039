@@ -1,0 +1,31 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<map>
+#include<set>
+using namespace std;
+map<string,set<int>>amap;
+int main(){
+	int n,k,course,num;;
+	cin>>n>>k;
+	char *a = (char *) malloc(4);
+	string b;
+	for(int i=0;i<k;i++){
+		cin>>course>>num;
+		for(int i=0;i<num;i++){
+			scanf("%s",a);
+			b = a;
+			amap[b].insert(course);
+		}
+	}
+	for(int i=0;i<n;i++){
+		scanf("%s",a);
+		b = a;
+		printf("%s %d",a,amap[b].size());
+		for(auto it = amap[b].begin();it!=amap[b].end();it++){
+			cout<<" "<<(*it);
+		}
+		cout<<endl;
+	}
+	return 0;
+}
