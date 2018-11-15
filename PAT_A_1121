@@ -1,0 +1,38 @@
+#include<vector>
+#include<iostream>
+#include<set>
+using namespace std;
+//1120
+int main(){
+ int n,man,woman,num;
+ int a[100003];
+ bool b[100003];
+ fill(a,a+100002,-1);
+ cin>>n;
+ set<int> ans;
+ vector<int> temp;
+ for(int i=0;i<n;i++){
+	cin>>man>>woman;
+	a[man] = woman;
+	a[woman] = man;
+ }
+ cin>>n;
+ for(int i=0;i<n;i++){
+	cin>>num;
+	temp.push_back(num);
+	b[num] = true;
+ }
+ for(int i=0;i<n;i++){
+	if(a[temp[i]]==-1||(b[a[temp[i]]]!=true)){
+		ans.insert(temp[i]);
+	}
+ }
+ cout<<ans.size()<<endl;
+ for(auto it = ans.begin();it!=ans.end();it++){
+	 if(it==ans.begin())
+		 printf("%05d",*it);
+	 else
+		 printf(" %05d",*it);
+ }
+  return 0;
+}
