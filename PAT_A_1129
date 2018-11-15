@@ -1,0 +1,40 @@
+#include<vector>
+#include<iostream>
+#include<algorithm>
+#include<set>
+using namespace std;
+//1129
+int num = 0,frequency[50002];
+struct node{
+	int id,cnt;
+	bool operator <(const node &a) const{
+		if(cnt!=a.cnt)  return cnt>a.cnt;
+		else return id<a.id;
+	}
+};
+int main(){
+	int n,maximum;
+	fill(frequency,frequency+50000,0);
+	scanf("%d%d",&n,&maximum);
+	set<node> ans;
+	node temp;
+	for(int i=0;i<n;i++){
+		scanf("%d",&num);
+		if(i!=0){
+			printf("%d:",num);
+			int j = 0;
+			for(auto jj = ans.begin();jj!=ans.end()&&j<maximum;jj++,j++){
+				printf(" %d",*jj);
+			}
+			printf("\n");
+		}
+		temp.id = num;
+		temp.cnt = frequency[num];
+		auto it = ans.find(temp);
+		if(it!=ans.end()) ans.erase(it);
+		frequency[num]++;
+		temp.cnt = frequency[num];
+		ans.insert(temp);
+	}
+	return 0;
+}
