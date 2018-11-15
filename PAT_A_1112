@@ -1,0 +1,52 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<unordered_map>
+using namespace std;
+//1112
+int main() {
+	int n;
+	string a;
+	unordered_map<char, bool> good,ans,exist;
+	vector<char> bad;
+	scanf("%d", &n);
+	getchar();
+	getline(cin, a);
+	int i = 0;
+	while (i < a.length()) {
+		int flag = false;
+		for (int j = 1; j < n; j++) {
+			if (a[i] != a[i + j]) {
+				flag = true;   //代表不是坏键
+				break;
+			}
+		}
+		if (flag == false) {   //是坏键
+			if (exist[a[i]] != true) {
+				bad.push_back(a[i]);
+				exist[a[i]] = true;
+			}
+			i = i + n;
+		}
+		else {
+			good[a[i]] = true;
+			i++;
+		}
+	}
+	for (int it = 0; it < bad.size();it++) {
+		if (good[bad[it]] != true) {
+			cout << bad[it];
+			ans[bad[it]] = true;
+		}
+	}
+	cout << endl;
+	i = 0;
+	while (i < a.length()) {
+		printf("%c", a[i]);
+		if (ans[a[i]] == true)
+			i = i + n;
+		else 
+			i++;
+	}
+	return 0;
+}
