@@ -1,0 +1,27 @@
+//1054
+#include<vector>
+#include<iostream>
+#include<stdio.h>
+#include<algorithm>
+#include<string>
+#include<set>
+#include<map>
+using namespace std;
+//1054
+int main(){
+	map<int,int> ans;
+	int n = 0,m = 0,num = 0;
+	scanf("%d%d",&n,&m);
+	int half =n*m/2;
+	for(int i=0;i<m;i++){
+		for(int j=0;j<n;j++){
+			scanf("%d",&num);
+			ans[num]++;
+			if(ans[num]>half){
+				cout<<num;
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
