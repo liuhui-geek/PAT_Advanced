@@ -1,0 +1,70 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<stack>
+using namespace std;
+//1156
+int main() {
+	int n = 0, group = 0, num = 0;
+	cin >> n >> group;
+	vector<int> a(n);
+	queue<int> cal, maxcal;
+	stack<int> aa,temp;
+	for (int i = 0; i < n; i++) {
+		cin >> a[i];
+	}
+	for (int i = 0; i < n; i++) {
+		cin >> num;
+		cal.push(num);
+	}
+	while (cal.size() != 1) {
+		int flag = 0, max = -1, maxnum = 0;
+		while (!cal.empty()) {
+			if (a[cal.front()] > max) {
+				maxnum = cal.front();
+				max = a[cal.front()];
+				cal.pop();
+				if (!aa.empty()&&flag!=0) {   //如果当前不为空，先把aa中的数放入temp中，把cal的数压入aa中，如果到了最后，将aa中的压入队列maxcal中
+					temp.push(aa.top());
+					aa.pop();
+				}
+				aa.push(maxnum);
+			}
+			else {
+				temp.push(cal.front());
+				cal.pop();
+			}
+			flag++;
+			if (flag == group || cal.empty()) {
+				flag = 0;
+				max = -1;
+				maxcal.push(aa.top());
+				aa.pop();
+			}
+		}
+		temp.push(-1);
+		while (!maxcal.empty()) {
+			cal.push(maxcal.front());
+			maxcal.pop();
+		}
+	}
+	int rank = 2,index = 2;
+	a[cal.front()] = 1;
+	while (!temp.empty()) {
+		if (temp.top() == -1) {
+			rank  = index;
+		}
+		else {
+			a[temp.top()] = rank;
+			index++;
+		}
+		temp.pop();
+	}
+	for (int i = 0; i < n; i++) {
+		if (i == 0)
+			cout << a[i];
+		else
+			cout << " " << a[i];
+	}
+	return 0;
+}
