@@ -1,0 +1,111 @@
+#include<vector>
+#include<iostream>
+#include<stdio.h>
+#include<algorithm>
+#include<string>
+#include<set>
+using namespace std;
+//1022
+int n = 0,num = 0,flag = 0,m = 0;
+struct book{
+	int id,year;
+	string title,author,keyword,publisher;
+}books[10002];
+bool cmp(book a,book b){
+	return a.id<b.id;
+}
+void findtitle(string a){
+	for(int i=0;i<n;i++){
+		if(books[i].title==a){
+			printf("%07d\n",books[i].id);
+			flag = 1;
+		}	
+	}
+	if(flag == 0)
+		cout<<"Not Found"<<endl;
+}
+void findauthor(string a){
+	for(int i=0;i<n;i++){
+		if(books[i].author==a){
+			printf("%07d\n",books[i].id);
+			flag = 1;
+		}	
+	}
+	if(flag == 0)
+		cout<<"Not Found"<<endl;
+}
+void findkeyword(string a){
+	for(int i=0;i<n;i++){
+		if(books[i].keyword.find(a)!=string::npos){
+			printf("%07d\n",books[i].id);
+			flag = 1;
+		}	
+	}
+	if(flag == 0)
+		cout<<"Not Found"<<endl;
+}
+void findpublisher(string a){
+	for(int i=0;i<n;i++){
+		if(books[i].publisher==a){
+			printf("%07d\n",books[i].id);
+			flag = 1;
+		}	
+	}
+	if(flag == 0)
+		cout<<"Not Found"<<endl;
+}
+void findyear(int year){
+	for(int i=0;i<n;i++){
+		if(books[i].year==year){
+			printf("%07d\n",books[i].id);
+			flag = 1;
+		}	
+	}
+	if(flag == 0)
+		cout<<"Not Found"<<endl;
+}
+int main(){
+	scanf("%d",&n);
+	for(int i=0;i<n;i++){
+		scanf("%d",&books[i].id);  getchar();
+		getline(cin,books[i].title);
+		getline(cin,books[i].author);
+		getline(cin,books[i].keyword);
+		getline(cin,books[i].publisher);
+		scanf("%d",&books[i].year); getchar();
+	}
+	sort(books,books+n,cmp);
+	scanf("%d",&m);
+	getchar();
+	string a;
+	for(int i=0;i<m;i++){
+		getline(cin,a);
+		cout<<a<<endl;
+		num = a[0]-'0';
+		a = a.substr(3);
+		switch(num){
+		case 1:
+			flag = 0;
+			findtitle(a);
+			break;
+		case 2:
+			flag = 0;
+			findauthor(a);
+			break;
+		case 3:
+			flag = 0;
+			findkeyword(a);
+			break;
+		case 4:
+			flag = 0;
+			findpublisher(a);
+			break;
+		case 5:
+			flag = 0;
+			int year = stoi(a);
+			findyear(year);
+			break;
+		}
+	}
+	return 0;
+}
