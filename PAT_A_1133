@@ -8,7 +8,7 @@ struct node {
 }ans[100002];
 int main() {
 	vector<node> negative,less,greater;
-	int n, start,k, num = 0;
+	int n, start,k,num = 0;
 	scanf("%d%d%d", &start, &n, &k);
 	for (int i = 0; i < n; i++) {
 		scanf("%d", &num);
@@ -24,16 +24,12 @@ int main() {
 			greater.push_back(ans[start]);
 		start = ans[start].next;
 	}
-	for (int i = 0; i < less.size(); i++) {
+	for (int i = 0; i < less.size(); i++)
 		negative.push_back(less[i]);
-	}
-	for (int i = 0; i < greater.size(); i++) {
+	for (int i = 0; i < greater.size(); i++)
 		negative.push_back(greater[i]);
-	}
-	for (int i = 0; i < negative.size()-1; i++) {
+	for (int i = 0; i < negative.size()-1; i++)
 		printf("%05d %d %05d\n", negative[i].num, negative[i].data, negative[i + 1].num);
-	}
 	printf("%05d %d %d\n", negative[negative.size() - 1].num, negative[negative.size() - 1].data, -1);
-	
 	return 0;
 }
