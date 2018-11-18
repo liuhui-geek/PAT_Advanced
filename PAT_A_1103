@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+int n, k, p,maxsum = -1;
+vector<int> temp, ans,tempans;
+void init() {
+	int index = 1,sum = 0;
+	while (sum <= n) {
+		temp.push_back(sum);
+		sum = pow(index, p);
+		index++;
+	}
+}
+void dfs(int loc,int sum,int tempk,int sumfactor) { //代表当前计算的位数，平方总和，填补位数，因素总和；
+	if (tempk == k) {
+		if (sum == n&&sumfactor>maxsum) {
+			maxsum = sumfactor;
+			ans = tempans;
+		}
+		return;
+	}
+	while (loc>=1) {
+		if (sum + temp[loc] <= n) {
+			tempans[tempk] = loc;
+			dfs(loc, sum + temp[loc], tempk + 1, sumfactor + loc);
+		}
+		if (loc == 1)
+			return;
+		loc--;
+	}
+}
+int main() {
+	scanf("%d%d%d", &n, &k, &p);
+	init();
+	tempans.resize(k);
+	dfs(temp.size() - 1, 0, 0, 0);
+	if (maxsum == -1)
+		printf("Impossible");
+	else {
+		printf("%d = ", n);
+		for (int i = 0; i < ans.size(); i++) {
+			if (i != 0) printf(" + ");
+			printf("%d^%d", ans[i], p);
+		}
+	}
+	return 0;
+}
