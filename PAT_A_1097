@@ -1,0 +1,42 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+//1052
+using namespace std;
+struct node {
+	int next, data, num;
+}ans[100002];
+int main() {
+	vector<node> temp,dedup;
+	bool exist[100002] = { false };
+	int n, start, num = 0, rev = 0;
+	scanf("%d%d", &start, &n);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &num);
+		scanf("%d%d", &ans[num].data, &ans[num].next);
+		ans[num].num = num;
+	}
+	while (start != -1) {
+		if (exist[abs(ans[start].data)] == false) {
+			temp.push_back(ans[start]);
+			exist[abs(ans[start].data)] = true;
+			start = ans[start].next;
+		}
+		else {
+			dedup.push_back(ans[start]);
+			start = ans[start].next;
+		}
+	}
+	for (int i = 0; i < temp.size()-1; i++) {
+		printf("%05d %d %05d\n", temp[i].num, temp[i].data, temp[i + 1].num);
+	}
+	printf("%05d %d %d\n", temp[temp.size()-1].num, temp[temp.size() - 1].data, -1);
+	if (dedup.size() != 0) {
+		for (int i = 0; i < dedup.size() - 1; i++) {
+			printf("%05d %d %05d\n", dedup[i].num, dedup[i].data, dedup[i + 1].num);
+		}
+	printf("%05d %d %d\n", dedup[dedup.size() - 1].num, dedup[dedup.size() - 1].data, -1);
+	}
+	
+	return 0;
+}
