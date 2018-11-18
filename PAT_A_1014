@@ -1,0 +1,53 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+using namespace std;
+struct node{
+	int id,time;
+};
+
+int main(){
+	int n,m,k,q,i,j;
+	scanf("%d %d %d %d", &n, &m, &k, &q);
+	vector<int> waste(k+1),finishtime(k+1);
+	for(i=1; i<=k; i++) 
+		scanf("%d", &waste[i]);
+	vector<queue<node>> window(n);
+	for(i=1;i<=k;i++){
+		int minlength = 0,firstfinish = 0;
+		node node;
+		node.id = i;
+		for(j=0;j<n;j++){
+			if(window[j].size()==0){ //如果窗口内没有人
+				minlength = j;
+				break;
+			}else{   //找到最短的队列和最先结束的队列
+				if(window[j].size()<window[minlength].size()) minlength = j;
+				if(window[j].front().time<window[firstfinish].front().time) firstfinish = j;
+			}
+		}
+		if(window[minlength].size()<m){        //找到最短队列与最先结束的队列后，开始排队处理，如果队列未满，则排到最短的队列后面
+			if(window[minlength].size()!=0)
+				node.time = window[minlength].back().time + waste[i];
+			else
+				node.time = 480+waste[i];
+			window[minlength].push(node);
+			finishtime[i] = node.time;
+		}else{                                   //如果队列满了的话，排到最先结束的队列中。
+			node.time = window[firstfinish].back().time + waste[i];
+			window[firstfinish].pop();
+			window[firstfinish].push(node);
+			finishtime[i] = node.time;
+		}
+	}
+	for(i = 0;i<q;i++){
+		int query;
+		scanf("%d", &query);
+		if(finishtime[query]-waste[query] >= 17*60) 
+			printf("Sorry\n");
+		else 
+			printf("%02d:%02d\n", finishtime[query]/60, finishtime[query]%60);
+	}
+	return 0;
+}
