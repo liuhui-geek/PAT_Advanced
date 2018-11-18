@@ -1,0 +1,33 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+//1052
+using namespace std;
+struct node {
+	int next, data, num;
+}ans[100002];
+int main() {
+	vector<node> temp;
+	int n, start, num = 0, rev = 0;
+	scanf("%d%d%d", &start, &n, &rev);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &num);
+		scanf("%d%d", &ans[num].data, &ans[num].next);
+		ans[num].num = num;
+	}
+	while (start != -1) {
+		temp.push_back(ans[start]);
+		start = ans[start].next;
+	}
+	for (int i = 0; i < temp.size() / rev; i++) {
+		for (int j = 0; j < rev / 2; j++) {
+			swap(temp[i*rev+j].data, temp[(i + 1)*rev - j - 1].data);
+			swap(temp[i*rev + j].num, temp[(i+1)*rev-j- 1].num);
+		}
+	}
+	for (int i = 0; i < temp.size()-1; i++) {
+		printf("%05d %d %05d\n", temp[i].num, temp[i].data, temp[i + 1].num);
+	}
+	printf("%05d %d %d", temp[temp.size()-1].num, temp[temp.size() - 1].data, -1);
+	return 0;
+}
