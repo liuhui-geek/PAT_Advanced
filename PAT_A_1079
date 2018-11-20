@@ -1,3 +1,4 @@
+//方法一 dfs
 #include<iostream>
 #include<vector>
 #include<map>
@@ -53,5 +54,56 @@ int main() {
 		res.pop();
 	}
 	cout << fixed << setprecision(1) << sum * p << endl;
+	return 0;
+}
+
+//方法二 bfs
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<math.h>
+#include<algorithm>
+using namespace std;
+//1079
+int n = 0, num = 0, child = 0;
+double price, r,total;
+struct node {
+	int data = 0;
+	int level = 0;
+	double price;
+	vector<int> child;
+}ans[100002];
+void bfs(int root) {
+	queue<int> q;
+	q.push(root);
+	while (!q.empty()) {
+		int front = q.front();
+		if (ans[front].data != 0)
+			total += ans[front].data*(price*pow(1+r/100,ans[front].level));
+		q.pop();
+		for (int i = 0; i < ans[front].child.size(); i++) {
+			ans[ans[front].child[i]].level = ans[front].level + 1;
+			q.push(ans[front].child[i]);
+		}
+	}
+}
+int main(){
+	scanf("%d %lf %lf", &n, &price, &r);
+	ans[0].price = price;
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &num);
+		if (num == 0) {
+			scanf("%d", &child);
+			ans[i].data = child;
+		}
+		else {
+			for (int j = 0; j < num; j++) {
+				scanf("%d", &child);
+				ans[i].child.push_back(child);
+			}
+		}
+	}
+	bfs(0);
+	printf("%.1f", total);
 	return 0;
 }
