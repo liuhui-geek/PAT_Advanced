@@ -1,0 +1,33 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+int n, m, id, k, num,maxlevel,maxnum;
+vector<vector<int>> ans;
+vector<int> levels;
+void dfs(int root, int level) {
+	levels[level]++;
+	for (int i = 0; i < ans[root].size(); i++) {
+		dfs(ans[root][i], level + 1);
+	}
+}
+int main() {
+	scanf("%d%d", &n, &m);
+	ans.resize(n+1);
+	levels.resize(n+1);
+	for (int i = 1; i <= m; i++) {
+		scanf("%d%d", &id, &k);
+		for (int j = 0; j < k; j++) {
+			scanf("%d", &num);
+			ans[id].push_back(num);
+		}
+	}
+	dfs(1, 1);
+	for (int i = 0; i < levels.size(); i++) {
+		if (levels[i] > maxnum) {
+			maxnum = levels[i];
+			maxlevel = i;
+		}
+	}
+	printf("%d %d", maxnum, maxlevel);
+	return 0;
+}
