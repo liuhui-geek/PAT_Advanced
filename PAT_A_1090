@@ -1,0 +1,87 @@
+//方法一： dfs
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<math.h>
+#include<algorithm>
+using namespace std;
+//1090
+int n = 0, num = 0, child = 0,root = 0, retailer = 0,maxhigh = 0;
+double price, r,maxprice;
+vector<vector<int>> ans;
+void dfs(int root, int high) {
+	if (high > maxhigh) {
+		maxhigh = high;
+		retailer = 1;
+	}
+	else if(maxhigh == high)
+		retailer++;
+	for (int i = 0; i < ans[root].size(); i++) {
+		dfs(ans[root][i],high+1);
+	}
+}
+int main() {
+	scanf("%d %lf %lf", &n, &price, &r);
+	ans.resize(100002);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &num);
+		if (num == -1)
+			root = i;
+		else
+			ans[num].push_back(i);
+	}
+	dfs(root, 0);
+	printf("%.2f %d", price*pow(1+r/100,maxhigh),retailer);
+	return 0;
+}
+
+
+
+//方法二 ： bfs
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<math.h>
+#include<algorithm>
+using namespace std;
+//1090
+int n = 0, num = 0, child = 0,root = 0, retailer = 0;
+double price, r,maxprice;
+struct node {
+	int level = 0;
+	double price;
+	vector<int> child;
+}ans[100002];
+void bfs(int root) {
+	queue<int> q;
+	q.push(root);
+	while (!q.empty()) {
+		int front = q.front();
+		q.pop();
+		ans[front].price = price*pow(1 + r / 100, ans[front].level);
+		if (ans[front].price > maxprice) {
+			maxprice = ans[front].price;
+			retailer = 1;
+		}
+		else if (ans[front].price == maxprice)
+			retailer++;
+		for (int i = 0; i < ans[front].child.size(); i++) {
+			ans[ans[front].child[i]].level = ans[front].level + 1;
+			q.push(ans[front].child[i]);
+		}
+	}
+}
+int main() {
+	scanf("%d %lf %lf", &n, &price, &r);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &num);
+		if (num == -1)
+			root = i;
+		else
+			ans[num].child.push_back(i);
+	}
+	ans[root].price = price;
+	bfs(root);
+	printf("%.2f %d", maxprice,retailer);
+	return 0;
+}
