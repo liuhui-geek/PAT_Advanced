@@ -1,0 +1,78 @@
+#include<iostream>
+#include<algorithm>
+#include<queue>
+#include<stack>
+using namespace std;
+//1127
+struct node {
+	int data;
+	int level;
+	node* left;
+	node* right;
+};
+int n, post[32], in[32],curlevel = 2;;
+queue<node*> p;
+node *create(int postleft, int postright, int inleft, int inright) {
+	if (postleft > postright) {
+		return NULL;
+	}
+	node *root = new node;
+	root->data = post[postright];
+	int k;
+	for (k = inleft; k <= inright; k++) {
+		if (in[k] == post[postright])
+			break;
+	}
+	int numleft = k - inleft;
+	root->left = create(postleft, postleft + numleft - 1, inleft, k - 1);
+	root->right = create(postleft + numleft, postright - 1, k + 1, inright);
+	return root;
+}
+void bfs(node *root) {
+	queue<node*> q;
+	q.push(root);
+	while (!q.empty()) {
+		node* front = q.front();
+		q.pop();
+		p.push(front);
+		if (front->left != NULL) {
+			front->left->level = front->level + 1;
+			q.push(front->left);
+		}
+		if (front->right != NULL) {
+			front->right->level = front->level + 1;
+			q.push(front->right);
+		}
+	}
+}
+int main() {
+	stack<node*> temp;
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++)
+		scanf("%d", &in[i]);
+	for (int i = 1; i <= n; i++)
+		scanf("%d", &post[i]);
+	node *root = create(1, n, 1, n);
+	root->level = 1;
+	bfs(root);
+	printf("%d", p.front()->data);
+	p.pop();
+	while (!p.empty()) {
+		if (p.front()->level % 2 == 0) {
+			printf(" %d", p.front()->data);
+			p.pop();
+		}
+		else {
+			while (!p.empty()&&p.front()->level % 2 == 1 ) {
+				node* tt = p.front();
+				p.pop();
+				temp.push(tt);
+			}
+			while (!temp.empty()) {
+				printf(" %d", temp.top()->data);
+				temp.pop();
+			}
+		}
+	}
+	return 0;
+}
