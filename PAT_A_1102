@@ -3,9 +3,8 @@
 #include<queue>
 #include<algorithm>
 using namespace std;
-//1086
+//1102
 struct node {
-	int data;
 	int left = -1, right = -1;
 }tree[11];
 int n;
@@ -14,17 +13,16 @@ int num = 0;
 void bfs(int root) {               //输出层次序列
 	queue<int> q;
 	q.push(root);
-	exist[root] = true;
 	while (!q.empty()) {
 		int temp = q.front();
 		q.pop();
 		num++;
 		printf("%d", temp);
 		if (num < n) printf(" ");
-		if (tree[temp].right != -1 && exist[tree[temp].right] != true) {
+		if (tree[temp].right != -1) {
 			q.push(tree[temp].right);
 		}
-		if (tree[temp].left != -1 && exist[tree[temp].left] != true) {
+		if (tree[temp].left != -1) {
 			q.push(tree[temp].left);
 		}
 	}
@@ -60,10 +58,8 @@ int main() {
 		if (exist[j] == false)
 			break;
 	}
-	fill(exist.begin(), exist.end(), false);
-	int root = j;
-	bfs(root);
+	bfs(j);
 	printf("\n");
-	inorder(root);
+	inorder(j);
 	return 0;
 }
