@@ -1,0 +1,69 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+//1086
+struct node {
+	int data;
+	int left = -1, right = -1;
+}tree[11];
+int n;
+vector<bool> exist;
+int num = 0;
+void bfs(int root) {               //输出层次序列
+	queue<int> q;
+	q.push(root);
+	exist[root] = true;
+	while (!q.empty()) {
+		int temp = q.front();
+		q.pop();
+		num++;
+		printf("%d", temp);
+		if (num < n) printf(" ");
+		if (tree[temp].right != -1 && exist[tree[temp].right] != true) {
+			q.push(tree[temp].right);
+		}
+		if (tree[temp].left != -1 && exist[tree[temp].left] != true) {
+			q.push(tree[temp].left);
+		}
+	}
+}
+int index = 0;
+void inorder(int root) {               //输出倒置的中序
+	if (root == -1)
+		return;
+	inorder(tree[root].right);
+	index++;
+	printf("%d", root);
+	if (index < n) printf(" ");
+	inorder(tree[root].left);
+	return;
+}
+int main() {
+	char a, b;
+	cin >> n;
+	exist.resize(n);
+	for (int i = 0; i < n; i++) {
+		cin >> a >> b;
+		if (a != '-') {
+			tree[i].left = a - '0';
+			exist[a - '0'] = true;
+		}
+		if (b != '-') {
+			tree[i].right = b - '0';
+			exist[b - '0'] = true;
+		}
+	}
+	int j;
+	for (j = 0; j < n; j++) {
+		if (exist[j] == false)
+			break;
+	}
+	fill(exist.begin(), exist.end(), false);
+	int root = j;
+	bfs(root);
+	printf("\n");
+	inorder(root);
+	return 0;
+}
