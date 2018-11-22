@@ -1,0 +1,43 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+int n,pre[31],post[31];
+vector<int> in;
+bool flag = true;
+void judge(int prel,int prer,int postl,int postr){
+	if(prel>prer)
+		return;
+	if(prel==prer){
+		in.push_back(pre[prel]);
+		return;
+	}
+	if(pre[prel]==post[postr]){
+		int i = prel+1;
+		while(i<=prer&&pre[i]!=post[postr-1])
+			i++;
+		if(i-prel>1)
+			judge(prel+1,i-1,postl,postl+(i-prel-1)-1);
+		else
+			flag = false;
+		in.push_back(post[postr]);
+		judge(i,prer,postl+(i-prel-1),postr-1);
+	}
+}
+int main(){
+	scanf("%d",&n);
+	for(int i=0;i<n;i++)
+		scanf("%d",&pre[i]);
+	for(int i=0;i<n;i++)
+		scanf("%d",&post[i]);
+	judge(0,n-1,0,n-1);
+	if(flag)
+		printf("Yes\n");
+	else 
+		printf("No\n");
+	for(int i=0;i<in.size();i++){
+		printf("%d",in[i]);
+		if(i<in.size()-1) printf(" ");
+	}
+	printf("\n");
+	return 0;
+}
