@@ -1,0 +1,89 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+struct node{
+	int data;
+	node* left;
+	node* right;
+};
+int n;
+vector<int> bst,pre,mirrors,post;
+void insert(node* &root,int data){
+	if(root==NULL){
+		root = new node;
+		root->data = data;
+		root->left = root->right = NULL;
+		return;
+	}
+	if(data<root->data)
+		insert(root->left,data);
+	else
+		insert(root->right,data);
+}
+void preorder(node* root){
+	if(root==NULL)
+		return;
+	pre.push_back(root->data);
+	if(root->left!=NULL)
+		preorder(root->left);
+	if(root->right!=NULL)
+		preorder(root->right);
+}
+void mirror(node* root){
+	if(root==NULL)
+		return;
+	mirrors.push_back(root->data);
+	if(root->right!=NULL)
+		mirror(root->right);
+	if(root->left!=NULL)
+		mirror(root->left);
+}
+void postorder(node* root){
+	if(root==NULL)
+		return;
+	if(root->left!=NULL)
+		postorder(root->left);
+	if(root->right!=NULL)
+		postorder(root->right);
+	post.push_back(root->data);
+}
+void mirrorpost(node* root){
+	if(root==NULL)
+		return;
+	if(root->right!=NULL)
+		mirrorpost(root->right);
+	if(root->left!=NULL)
+		mirrorpost(root->left);
+	post.push_back(root->data);
+}
+void printpost(){
+	printf("YES\n");
+		for(int i=0;i<n;i++){
+			printf("%d",post[i]);
+			if(i<n-1) printf(" ");
+		}
+}
+int main(){
+	scanf("%d",&n);
+	bst.resize(n);
+	node* root = NULL;
+	for(int i=0;i<n;i++){
+		scanf("%d",&bst[i]);
+		insert(root,bst[i]);    //建¡§立¢¡éBST
+	}
+	preorder(root);
+	mirror(root);
+	if(bst==pre){
+		postorder(root);
+		printpost();
+	}
+	else if(bst==mirrors){
+		post.clear();
+		mirrorpost(root);
+		printpost();
+	}
+	else
+		printf("NO");
+
+	return 0;
+}
