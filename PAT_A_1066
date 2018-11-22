@@ -1,0 +1,62 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+struct node {
+	int val;
+	node* left;
+	node* right;
+};
+int getheight(node* root) {
+	if (root == NULL)  return 0;
+	return max(getheight(root->left), getheight(root->right)) + 1;
+}
+node* R(node* root) {      //从根节点出发， 右旋
+	node *t = root->left;          //新节点代替指向左孩子 
+	root->left = t->right;         //左孩子的右结点取代根节点的左孩子
+	t->right = root;               //左孩子的右结点指向根节点；
+	return t;                     //返回左孩子作为新的根节点
+}
+node* L(node* root) {         //从根节点出发， 左旋
+	node* t = root->right;
+	root->right = t->left;
+	t->left = root;
+	return t;
+}
+node* LR(node* root) {                     //先左旋再右旋
+	root->left = L(root->left);            //将根节点的左孩子指向旋转完之后的结点，此处是以根节点的左孩子作为旋转的根。
+	return R(root);                         //右旋根节点
+}
+node* RL(node* root) {                   //先右旋在左旋
+	root->right = R(root->right);       
+	return L(root);
+}
+node *insert(node* root, int val) {
+	if (root == NULL) {
+		root = new node;
+		root->val = val;
+		root->left = root->right = NULL;
+	}
+	else if (val<root->val) {
+		root->left = insert(root->left, val);
+		if (getheight(root->left) - getheight(root->right) == 2)    //出现不平衡现象
+			root = val<root->left->val ? R(root) : LR(root);         //小于root->left->val，插入左子树左孩子，要进行右旋，大于root->left->val,插入左子树右孩子，要进行左旋后右旋；
+	}
+	else {
+		root->right = insert(root->right, val);
+		if (getheight(root->left) - getheight(root->right) == -2)     
+			root = val>root->right->val ? L(root) : RL(root);       //大于root->right->val，插入右子树右孩子，要进行左旋，小于root->left->val,插入右子树左孩子，要进行右旋后左旋；
+	}
+	return root;
+}
+int main() {
+	int n, val;
+	node* root = NULL;
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &val);
+		root = insert(root, val);
+	}
+	printf("%d", root->val);
+	return 0;
+}
