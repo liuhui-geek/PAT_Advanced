@@ -1,0 +1,63 @@
+#include<iostream>
+#include<queue>
+#include<algorithm>
+using namespace std;
+struct node {
+	int time;
+	int process;
+}custom[10002];
+bool cmp(node a, node b) {
+	return a.time < b.time;
+}
+int main() {
+	int n, k, hh, mm, ss, process, time, high = 0, starttime = 28800, closetime = 61200;
+	double totalwait = 0;
+	scanf("%d%d", &n, &k);
+	vector<int> win(k);
+	for (int i = 0; i < n; i++) {
+		scanf("%d:%d:%d %d", &hh, &mm, &ss, &process);
+		if (process > 60)
+			process = 60;
+		time = hh * 3600 + mm * 60 + ss;
+		custom[i].process = process * 60;
+		custom[i].time = time;
+		if(time>closetime) {
+			high++;
+		}
+	}
+	sort(custom, custom + n, cmp);
+	n = n - high;
+	queue<node> cust;
+	for (int i = 0; i < n; i++) {        //将结点全部放入队列中
+		cust.push(custom[i]);
+	}
+	for (int i = 0; i < k; i++) {             //首先将前K个结点填满
+		if (!cust.empty()) {
+			node front = cust.front();
+			cust.pop();
+			if (front.time < starttime) {       //如果结点时间小于银行开始时间，则设置为银行开始时间，但需要计算等候时间
+				totalwait += starttime - front.time;
+				front.time = starttime;
+			}
+			win[i] = front.time + front.process;
+		}
+	}
+	while (!cust.empty()) {                 //判断剩余结点等候时间
+		int minfinaltime = 100000, indexwindow = 0;
+		node front = cust.front();
+		cust.pop();
+		for (int i = 0; i < k; i++) {
+			if (win[i] < minfinaltime) {
+				minfinaltime = win[i];
+				indexwindow = i;
+			}
+		}
+		if (minfinaltime >= front.time) {
+			totalwait += minfinaltime - front.time;
+			win[indexwindow] += front.process;
+		}else
+			win[indexwindow] = front.time + front.process;
+	}
+	printf("%.1lf", totalwait / (n * 60));
+	return 0;
+}
