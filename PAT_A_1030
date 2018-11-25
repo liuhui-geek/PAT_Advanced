@@ -1,0 +1,65 @@
+#include <iostream>
+#include<algorithm>
+#include<stack>
+using namespace std;
+//1030
+int n, m, start, dest, a, b, c, d,temp = 0;
+int arc[502][502], cost[502][502], weight[502], path[502],pre[502],vecost[502];
+bool exist[502];
+stack<int> anspath;
+void Dijkstra(int root) {
+	path[root] = 0;
+	vecost[root] = 0;
+	for (int i = 0; i < n; i++) {
+		int min = 9999999, index = -1;
+		for (int i = 0; i < n; i++) {
+			if (exist[i] == false && path[i] < min) {
+				min = path[i];
+				index = i;
+			}
+		}
+		if (index == -1) return;
+		exist[index] = true;
+		for (int k = 0; k < n; k++) {
+			if (exist[k] == false && arc[index][k] < 9999999) {
+				if (path[index] + arc[index][k] < path[k]) {
+					path[k] = path[index] + arc[index][k];
+					pre[k] = index;
+					vecost[k] = cost[index][k] + vecost[index];
+				}
+				else if (path[index] + arc[index][k] == path[k]) {
+					path[k] = path[index] + arc[index][k];
+					if (vecost[k] > cost[index][k] + vecost[index]) {
+						vecost[k] = cost[index][k] + vecost[index];
+						pre[k] = index;
+					}
+				}
+			}
+		}
+	}
+}
+int main() {
+	scanf("%d%d%d%d", &n, &m, &start, &dest);
+	fill(arc[0], arc[0] + 502 * 502, 9999999);
+	fill(vecost, vecost + 502, 999999);
+	for (int i = 0; i < m; i++) {
+		scanf("%d%d%d%d", &a, &b, &c, &d);
+		arc[a][b] = arc[b][a] = c;
+		cost[a][b] = cost[b][a] = d;
+	}
+	for (int i = 0; i < n; i++) {
+		path[i] = arc[start][i];
+	}
+	Dijkstra(start);
+	temp = dest;
+	while (temp != start) {
+		anspath.push(pre[temp]);
+		temp = pre[temp];
+	}
+	while (!anspath.empty()) {
+		printf("%d ", anspath.top());
+		anspath.pop();
+	}
+	printf("%d %d %d", dest,path[dest],vecost[dest]);
+	return 0;
+}
