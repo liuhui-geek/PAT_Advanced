@@ -1,4 +1,6 @@
 #include <iostream>
+#include<algorithm>
+#include<cmath>
 using namespace std;
 int n, m, c1, c2, a, b, road;
 int weight[502], arc[502][502], num[502], path[502],people[502];
