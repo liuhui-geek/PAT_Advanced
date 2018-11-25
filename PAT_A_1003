@@ -1,68 +1,53 @@
-#include<iostream>
-
+#include <iostream>
 using namespace std;
-//Dijkstra算法
-#define MAX 502
-#define MAXNUM 2147483647
-int arc[MAX][MAX];      //邻接矩阵
-int dist[MAX];          //最短路径
-int num[MAX];           //从源点到目的点的最短路径数量
-int weigth[MAX];        //顶点的救援队数量
-int max_weigth[MAX];    //到达该顶点的最大救援队数量
-
-bool S[MAX];            //存放节点，判断是否遍历过
-
-int main() {
-	
-	int n, m, c1, c2;
-	int v1, v2, length;
-	cin >> n >> m >> c1 >> c2;
-	for (int i = 0; i < n; i++) {         //初始化边值
-		for (int j = 0; j < n; j++) {
-			arc[i][j] = MAXNUM;
-		}
-	}
-	for (int i = 0; i < n; i++) {         //初始化各定点权重（即救援队人数）
-		cin >> weigth[i];
-	}
-	for (int i = 0; i < m; i++) {           //根据题目初始化边值
-		cin >> v1 >> v2 >> length;
-		arc[v1][v2] = arc[v2][v1] = length;
-	}
-	                                      //初始化dist[]数组和S
+int n, m, c1, c2, a, b, road;
+int weight[502], arc[502][502], num[502], path[502],people[502];
+bool exist[502];
+void Dijkstra(int root) {
+	path[root] = 0;
+	num[root] = 1;
+	people[root] = weight[root];
 	for (int i = 0; i < n; i++) {
-		dist[i] = arc[c1][i];
-		S[i] = false;
-	}
-	dist[c1] = 0;                           
-	max_weigth[c1] = weigth[c1];
-	num[c1] = 1;
-	for (int i = 0; i < n; i++) {                
-		int max = MAXNUM;
-		int u = c1;
+		int min = 99999999, index = -1;
 		for (int j = 0; j < n; j++) {
-			if (!S[j] && dist[j] < max) {               //首先找出初始值c1，而后以此为基础不断更新dist
-				u = j;
-				max = dist[j];
+			if (exist[j] == false && path[j] < min) {    //代表当前节点可达且未访问过
+				min = path[j];
+				index = j;
 			}
 		}
-		S[u] = true;
-		for (int j = 0; j < n; j++) {
-			if (!S[j] && arc[u][j]<MAXNUM) {
-				if (dist[u] + arc[u][j] < dist[j]) {             
-					dist[j] = dist[u] + arc[u][j];
-					num[j] = num[u];
-					max_weigth[j] = weigth[j] + max_weigth[u];
+		if (index == -1) return;
+		exist[index] = true;
+		for (int k = 0; k < n; k++) {
+			if (exist[k] == false && arc[index][k] < 99999999) {
+				if (path[index] + arc[index][k] < path[k]) {
+					path[k] = path[index] + arc[index][k];
+					num[k] = num[index];
+					people[k] = weight[k] + people[index];
 				}
-				else if (dist[u] + arc[u][j] == dist[j]) {
-					num[j] = num[u]+ num[j];
-					if (max_weigth[j] < weigth[j] + max_weigth[u]) {
-						max_weigth[j] = weigth[j] + max_weigth[u];
-					}
+				else if (path[index] + arc[index][k] == path[k]) {
+					path[k] = path[index] + arc[index][k];
+					num[k] += num[index];
+					if(people[k] < weight[k] + people[index])
+						people[k] = weight[k] + people[index];
 				}
 			}
 		}
 	}
-	cout << num[c2] << " " << max_weigth[c2];
+}
+int main() {
+	scanf("%d%d%d%d", &n,&m, &c1, &c2);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &weight[i]);
+	}
+	fill(arc[0], arc[0] + 502 * 502, 99999999);
+	for (int i = 0; i < m; i++) {
+		scanf("%d%d%d", &a, &b, &road);
+		arc[a][b] = arc[b][a] = road;
+	}
+	for (int i = 0; i < n; i++) {
+		path[i] = arc[c1][i];
+	}
+	Dijkstra(c1);
+	printf("%d %d", num[c2], people[c2]);
 	return 0;
 }
