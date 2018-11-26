@@ -1,0 +1,101 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+map<string, int> amap;
+map<int, string> bmap;
+const int inf = 99999999;
+int n, m, startid, happy, city, cost,num = 1,maxhappy=0,mincity = 1000,maxhappines = 0,cnt = 0;
+int arc[210][210], weight[210], path[210],happines[210];
+bool exist[210];
+vector<int> road[210];
+vector<int> ans,temproad;
+vector<string> anscity;
+int getid(string a) {
+	if (amap[a] == 0) {
+		amap[a] = num;
+		bmap[num] = a;
+		num++;
+	}
+	return amap[a];
+}
+void Dijkstra(int root) {
+	path[root] = 0;
+	for (int i = 1; i <= n; i++) {
+		int min = inf, index = -1;
+		for (int j = 1; j <= n; j++) {
+			if (exist[j] == false && path[j] < min) {
+				min = path[j];
+				index = j;
+			}
+		}
+		if (index == -1) return;
+		exist[index] = true;
+		for (int k = 1; k <= n; k++)
+			if (exist[k] == false && arc[index][k] < inf)
+				if (path[k] > path[index] + arc[index][k]) {
+					path[k] = path[index] + arc[index][k];
+					road[k].clear();
+					road[k].push_back(index);
+				}
+				else if (path[k] == path[index] + arc[index][k]) {
+						road[k].push_back(index);
+				}
+	}
+}
+void dfs(int root) {
+	temproad.push_back(root);
+	if (root == 1) {
+		int happines = 0;
+		for (int j = 0; j < temproad.size(); j++) {
+			happines += weight[temproad[j]];
+		}
+		int level = temproad.size() - 1;
+		if (happines > maxhappines) {
+			mincity = level;
+			maxhappines = happines;
+			ans = temproad;
+		}else if (happines == maxhappines&&level < mincity) {
+			mincity = level;
+			ans = temproad;
+		}
+		temproad.pop_back();
+		cnt++;
+		return;
+	}
+	for (int i = 0; i<road[root].size(); i++) {
+		dfs(road[root][i]);
+	}
+	temproad.pop_back();
+}
+int main() {
+	string start,a,b;
+	scanf("%d%d", &n, &m);
+	cin >> start;
+	startid = getid(start);
+	fill(arc[0], arc[0] + 210 * 210, inf);
+	for (int i = 0; i < n - 1; i++) {
+		cin >> a >> happy;
+		int city = getid(a);
+		weight[city] = happy;
+	}
+	for (int i = 0; i < m; i++) {
+		cin >> a >> b >> cost;
+		int aa = getid(a);
+		int bb = getid(b);
+		arc[aa][bb] = arc[bb][aa] = cost;
+	}
+	for (int i = 1; i <= n; i++) {
+		path[i] = arc[startid][i];
+	}
+	Dijkstra(startid);
+	int root = getid("ROM");
+	dfs(root);
+	printf("%d %d %d %d\n", cnt, path[root], maxhappines, (int)(maxhappines / mincity));
+	cout<<start;
+	for (int i = ans.size() - 2; i >= 0; i--) {
+		cout << "->" << bmap[ans[i]];
+	}
+	return 0;
+}
