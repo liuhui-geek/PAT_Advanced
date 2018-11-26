@@ -1,0 +1,94 @@
+#include<iostream>
+#include<algorithm>
+#include<string>
+#include<vector>
+#include<queue>
+using namespace std;
+//1018
+int cmax, n, m, sp, a, b, times,bikes,minneed = 999999,minback;
+int bike[502], arc[502][502],path[502];
+bool exist[502];
+vector<int> temp[502];
+vector<int> ans, temppath;
+void Dijkstra(int root) {
+	path[root] = 0;
+	for (int i = 0; i <= n; i++) {
+		int min = 9999999, index = -1;
+		for (int j = 0; j <= n; j++) {
+			if (exist[j] == false && path[j] < min) {
+				min = path[j];
+				index = j;
+			}
+		}
+		if (index == -1)  return;
+		exist[index] = true;
+		for (int k = 0; k <= n; k++)
+			if (exist[k] == false && arc[index][k] < 9999999)
+				if (path[k] > path[index] + arc[index][k]) {
+					path[k] = path[index] + arc[index][k];
+					temp[k].clear();
+					temp[k].push_back(index);
+				}
+				else if (path[k] == path[index] + arc[index][k])
+					temp[k].push_back(index);
+	}
+}
+void dfs(int root) {
+	temppath.push_back(root);
+	if (root == 0) {
+		int need = 0, back = 0;
+		for (int j = temppath.size() - 1; j >= 0; j--) {
+			int k = temppath[j];
+			if (bike[k] > 0) {   //可取走
+				back += bike[k];
+			}
+			else {
+				if (back > abs(bike[k])) {
+					back += bike[k];
+				}
+				else {
+					need += abs(bike[k]) - back;
+					back = 0;
+				}
+			}
+		}
+		if (need < minneed) {
+			minneed = need;
+			minback = back;
+			ans = temppath;
+		}
+		else if(need==minneed&&back<minback){
+			ans = temppath;
+			minback = back;
+		}
+		temppath.pop_back();
+		return;
+	}
+	for (int i = 0; i < temp[root].size(); i++) {
+		dfs(temp[root][i]);
+	}
+	temppath.pop_back();
+}
+int main(){
+	scanf("%d%d%d%d", &cmax, &n, &sp, &m);
+	for (int i = 1; i <= n; i++) {
+		scanf("%d", &bikes);
+		bike[i] = bikes - cmax / 2;
+	}
+	fill(arc[0], arc[0] + 502 * 502, 9999999);
+	for (int i = 0; i < m; i++) {
+		scanf("%d%d%d", &a, &b, &times);
+		arc[a][b] = arc[b][a] = times;
+	}
+	for (int i = 0; i <= n; i++) {
+		path[i] = arc[0][i];
+	}
+	Dijkstra(0);
+	dfs(sp);
+	printf("%d 0", minneed);
+	for (int i = ans.size() - 2; i >= 0; i--) {
+		printf("->%d", ans[i]);
+	}
+	printf(" %d", minback);
+	return 0;
+}
