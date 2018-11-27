@@ -1,0 +1,130 @@
+#include <iostream>
+#include<algorithm>
+#include<stack>
+#include<vector>
+using namespace std;
+//1111
+const int inf = 9999999;
+int n, m, a, b, inter, length, t, start, dest;
+int arc[502][502], times[502][502], lengths[502][502],path[502],temptime[502],num[502],node[502];
+bool exist[502];
+vector<int> anslength[502],anstime[502];
+vector<int> ans1, ans2;
+void Dijkstra1(int root) {
+	path[root] = 0;
+	temptime[root] = 0;
+	for (int i = 0; i < n; i++) {
+		int min = inf, index = -1;
+		for (int j = 0; j < n; j++) {
+			if (exist[j] == false && path[j] < min) {
+				min = path[j];
+				index = j;
+			}
+		}
+		if (index == -1) return;
+		exist[index] = true;
+		for (int k = 0; k < n; k++) {
+			if (exist[k] == false && lengths[index][k] < inf) {
+				if (path[k] > path[index] + lengths[index][k]) {
+					path[k] = path[index] + lengths[index][k];
+					temptime[k] = temptime[index] + times[index][k];
+					anslength[k].clear();
+					anslength[k].push_back(index);
+				}else if(path[k] == path[index] + lengths[index][k]){
+					if (temptime[k] > temptime[index] + times[index][k]) {
+						temptime[k] = temptime[index] + times[index][k];
+						anslength[k].clear();
+						anslength[k].push_back(index);
+					}
+				}
+			}
+		}
+	}
+}
+void Dijkstra2(int root) {
+	temptime[root] = 0;
+	num[root] = 1;
+	for (int i = 0; i < n; i++) {
+		int min = inf, index = -1;
+		for (int j = 0; j < n; j++) {
+			if (exist[j] == false && temptime[j] < min) {
+				min = temptime[j];
+				index = j;
+			}
+		}
+		if (index == -1) return;
+		exist[index] = true;
+		for (int k = 0; k < n; k++) {
+			if (exist[k] == false && times[index][k] < inf) {
+				if (temptime[k] > temptime[index] + times[index][k]) {
+					num[k] = num[index]+node[k];
+					temptime[k] = temptime[index] + times[index][k];
+					anstime[k].clear();
+					anstime[k].push_back(index);
+				}
+				else if (temptime[k] == temptime[index] + times[index][k]) {
+					if (num[k]>num[index]+node[k]) {
+						num[k] = num[index] + node[k];
+						anstime[k].clear();
+						anstime[k].push_back(index);
+					}
+				}
+			}
+		}
+	}
+}
+int main() {
+	scanf("%d%d", &n, &m);
+	fill(lengths[0], lengths[0] + 502 * 502, inf);
+	fill(times[0], times[0] + 502 * 502, inf);
+	fill(path, path + 502, inf);
+	fill(temptime, temptime + 502, inf);
+	for (int i = 0; i < m; i++) {
+		scanf("%d%d%d%d%d", &a, &b, &inter, &length, &t);
+		lengths[a][b] = length;
+		times[a][b] = t;
+		if (inter != 1) {
+			times[b][a] = t;
+			lengths[b][a] = length;
+		}
+	}
+	scanf("%d%d", &start, &dest);
+	Dijkstra1(start);
+	int test = dest;
+	ans1.push_back(dest);
+	while (test != start) {
+		ans1.push_back(anslength[test][0]);
+		test = anslength[test][0];
+	}
+	fill(temptime, temptime + 502, inf);
+	fill(exist, exist + 502, false);
+	fill(node, node + 502, 1);
+	Dijkstra2(start);
+	test = dest;
+	ans2.push_back(dest);
+	while (test != start) {
+		ans2.push_back(anstime[test][0]);
+		test = anstime[test][0];
+	}
+	if (ans2 == ans1) {
+		printf("Distance = %d; Time = %d: ", path[dest], temptime[dest]);
+		printf("%d", start);
+		for (int i = ans2.size()-2; i >= 0 ; i--) {
+			printf(" -> %d", ans2[i]);
+		}
+	}
+	else {
+		printf("Distance = %d: ", path[dest]);
+		printf("%d", start);
+		for (int i = ans1.size() - 2; i >= 0; i--) {
+			printf(" -> %d", ans1[i]);
+		}
+		printf("\n");
+		printf("Time = %d: ", temptime[dest]);
+		printf("%d", start);
+		for (int i = ans2.size() - 2; i >= 0; i--) {
+			printf(" -> %d", ans2[i]);
+		}
+	}
+	return 0;
+}
