@@ -1,0 +1,46 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<map>
+#include<algorithm>
+using namespace std;
+//1128
+int main() {
+	int n, m, num;
+	double x = 0, y = 0;
+	map<int, bool> exist;
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &m);
+		bool flag = true;
+		vector<int> data(m+1);
+		exist.clear();
+		for (int j = 1; j <= m; j++) {
+			scanf("%d", &num);
+			data[j] = num;
+			if (exist[num] == true)
+				flag = false;
+			else
+				exist[num] = true;
+		}
+		if (flag == false)
+			printf("NO\n");
+		else {
+			for (int k = 1; k <= m - 1; k++) {
+				for (int h = k + 1; h <= m; h++) {
+					x = h - k;
+					y = data[h] - data[k];
+					if (x / y == 1 || x / y == -1) {
+						flag = false;
+					}
+				}
+			}
+			if(flag==false)
+				printf("NO\n");
+			else
+				printf("YES\n");
+		}
+		data.clear();
+	}
+	return 0;
+}
