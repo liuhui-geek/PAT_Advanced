@@ -1,0 +1,39 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+using namespace std;
+struct student {
+	string name;
+	int height;
+};
+bool cmp(student stud1, student stud2) {
+	return stud1.height == stud2.height ? stud1.name<stud2.name : stud1.height>stud2.height;
+}
+int main() {
+	int n, k, cnt = 0;
+	cin >> n >> k;
+	vector<student> vec(n);
+	for (int i = 0; i<n; i++)
+		cin >> vec[i].name >> vec[i].height;
+	sort(vec.begin(), vec.end(), cmp);
+	for (int i = 0; i<k; i++) {
+		int t;
+		i == 0 ? t = n%k + n / k : t = n / k;
+		vector<string> q(t);
+		int mid = t / 2;
+		q[mid] = vec[cnt++].name;
+		for (int j = 1; j <= t / 2; j++) {
+			if (mid - j<0)
+				break;
+			q[mid - j] = vec[cnt++].name;
+			if (mid + j>t - 1)
+				break;
+			q[mid + j] = vec[cnt++].name;
+		}
+		for (int j = 0; j<t; j++)
+			j == 0 ? cout << q[j] : cout << " " << q[j];
+		cout << endl;
+	}
+	return 0;
+}
