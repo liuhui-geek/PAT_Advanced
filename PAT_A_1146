@@ -1,52 +1,47 @@
 #include<iostream>
+#include<queue>
 #include<vector>
-#include<cstring>
+#include<algorithm>
+#include<math.h>
+//1146
 using namespace std;
-
-vector<int> v[1002];
-vector<int> ans;
-int main() {
-	int n, m;
-	cin>>n>>m;
-	int a, b;
-	int push[1002];
-	int temp[1002];
-	fill(push, push + n+1, 0);
-	fill(temp, temp + n+1, 0);
-	for (int i = 0; i < m; i++) {
-		cin >> a >> b;
+int main(){
+	int n,m,a,b;
+	scanf("%d%d",&n,&m);
+	vector<int> temp,ans;
+	vector<vector<int>> v(n+1);
+	int edgenum[1002],tempedge[1002];
+	fill(edgenum,edgenum+1002,0);
+	fill(tempedge,tempedge+1002,0);
+	for(int i=0;i<m;i++){
+		scanf("%d%d",&a,&b);
+		edgenum[b]++;
+		tempedge[b]++;
 		v[a].push_back(b);
-		push[b]++;
-		temp[b]++;
 	}
-	int query = 0;
-	cin>>query;
-	bool flag = false;
-	for (int i = 0; i < query; i++) {
-		for (int j = 0; j < n; j++) {
-			cin>>a;
-			if (push[a] != 0) {
-				flag = true;
+	scanf("%d",&a);
+	for(int i=0;i<a;i++){
+		for(int j=0;j<n;j++){
+			scanf("%d",&b);
+			temp.push_back(b);
+		}
+		for(int j=0;j<n;j++){
+			if(edgenum[temp[j]]==0){
+				for(int k=0;k<v[temp[j]].size();k++){
+					edgenum[v[temp[j]][k]]--;
+				}
+			}else{
+				ans.push_back(i);
+				break;
 			}
-			for (auto u = v[a].begin(); u != v[a].end(); u++) {
-				push[*u]--;
-			}
 		}
-		if (flag == true) {
-			ans.push_back(i);
-		}
-		flag = false;
-		memcpy(push, temp, sizeof(temp));
+		for(int j=1;j<n+1;j++)
+			edgenum[j] = tempedge[j];
+		temp.clear();
 	}
-
-	int size = ans.size();
-	int asize = 0;
-	for (auto u = ans.begin(); u != ans.end(); u++) {
-		cout << *u;
-		asize++;
-		if (asize != size) {
-			cout << " ";
-		}
+	for(int i=0;i<ans.size();i++){
+		printf("%d",ans[i]);
+		if(i!=ans.size()-1) printf(" ");
 	}
-	return 0;
+    return 0;
 }
