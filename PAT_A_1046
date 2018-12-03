@@ -2,45 +2,30 @@
 #include<vector>
 #include<algorithm>
 #include<math.h>
-//1146
+#include<queue>
+#include<stack>
+
 using namespace std;
 int main(){
-	int n,m,a,b;
-	scanf("%d%d",&n,&m);
-	vector<int> temp,ans;
-	vector<vector<int>> v(n+1);
-	int edgenum[1002],tempedge[1002];
-	fill(edgenum,edgenum+1002,0);
-	fill(tempedge,tempedge+1002,0);
+	int n,m,num = 0,a,b,c,aa = 0,bb = 0,minpath = 0,tempa = 0,tempb = 0;
+	scanf("%d",&n);
+	vector<int> ans(n+1);
+	ans[0] = 0;
+	for(int i=1;i<=n;i++){
+		scanf("%d",&c);
+		ans[i] = ans[i-1] + c;
+		num += c; 
+	}
+	scanf("%d",&m);
 	for(int i=0;i<m;i++){
 		scanf("%d%d",&a,&b);
-		edgenum[b]++;
-		tempedge[b]++;
-		v[a].push_back(b);
-	}
-	scanf("%d",&a);
-	for(int i=0;i<a;i++){
-		for(int j=0;j<n;j++){
-			scanf("%d",&b);
-			temp.push_back(b);
-		}
-		for(int j=0;j<n;j++){
-			if(edgenum[temp[j]]==0){
-				for(int k=0;k<v[temp[j]].size();k++){
-					edgenum[v[temp[j]][k]]--;
-				}
-			}else{
-				ans.push_back(i);
-				break;
-			}
-		}
-		for(int j=1;j<n+1;j++)
-			edgenum[j] = tempedge[j];
-		temp.clear();
-	}
-	for(int i=0;i<ans.size();i++){
-		printf("%d",ans[i]);
-		if(i!=ans.size()-1) printf(" ");
+		tempa = min(a,b);
+		tempb = max(a,b);
+		aa = ans[tempb-1]-ans[tempa-1];
+		bb = num - aa;
+		minpath = min(aa,bb);
+		printf("%d\n",minpath);
+		aa = 0;
 	}
     return 0;
 }
