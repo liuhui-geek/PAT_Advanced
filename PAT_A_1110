@@ -1,0 +1,55 @@
+#include<iostream>
+#include<set>
+#include<algorithm>
+#include<string>
+//1110
+using namespace std;
+struct node {
+	int left, right;
+}nodes[100];
+int minindex = 0, last = 0;;
+void dfs(int root, int index) {
+	if (index>minindex) {
+		minindex = index;
+		last = root;
+	}
+	if (nodes[root].left != -1) dfs(nodes[root].left, index * 2);
+	if (nodes[root].right != -1) dfs(nodes[root].right, index * 2 + 1);
+}
+int main() {
+	int n, father[100];
+	fill(father, father + 100, -1);
+	scanf("%d", &n);
+	getchar();
+	for (int i = 0; i<n; i++) {
+		string a, b;
+		cin >> a >> b;
+		getchar();
+		if (a == "-") {
+			nodes[i].left = -1;
+		}
+		else {
+			father[stoi(a)] = i;
+			nodes[i].left = stoi(a);
+		}
+		if (b == "-"){
+			nodes[i].right = -1;
+		}
+		else {
+			father[stoi(b)] = i;
+			nodes[i].right = stoi(b);
+		}
+	}
+	int temp = 0;
+	while (father[temp]!=-1) {
+		temp = father[temp];
+	}
+	dfs(temp, 1);
+	if (minindex == n) {
+		cout << "YES " << last;
+	}
+	else
+		cout << "NO " << temp;
+	return 0;
+
+}
