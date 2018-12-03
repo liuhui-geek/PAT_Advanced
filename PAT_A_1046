@@ -1,27 +1,46 @@
 #include<iostream>
+#include<vector>
 #include<algorithm>
 #include<math.h>
+//1146
 using namespace std;
-//1046
 int main(){
-	int n,num,pre[100002],query,a,b,total = 0;
-	scanf("%d", &n);
-	pre[0] = 0;
-	for (int i = 1; i <= n; i++) {
-		scanf("%d", &num);
-		total += num;
-		pre[i] = pre[i - 1] + num;
+	int n,m,a,b;
+	scanf("%d%d",&n,&m);
+	vector<int> temp,ans;
+	vector<vector<int>> v(n+1);
+	int edgenum[1002],tempedge[1002];
+	fill(edgenum,edgenum+1002,0);
+	fill(tempedge,tempedge+1002,0);
+	for(int i=0;i<m;i++){
+		scanf("%d%d",&a,&b);
+		edgenum[b]++;
+		tempedge[b]++;
+		v[a].push_back(b);
 	}
-	scanf("%d", &query);
-	for (int i = 0; i < query; i++) {
-		int path1 = 0,path2 = 0,path = 0;
-		scanf("%d%d", &a, &b);
-		if (a > b)
-			swap(a, b);
-		path1 = pre[b - 1] - pre[a - 1];
-		path2 = total - path1;
-		path = min(path1, path2);
-		printf("%d\n", path);
+	scanf("%d",&a);
+	for(int i=0;i<a;i++){
+		for(int j=0;j<n;j++){
+			scanf("%d",&b);
+			temp.push_back(b);
+		}
+		for(int j=0;j<n;j++){
+			if(edgenum[temp[j]]==0){
+				for(int k=0;k<v[temp[j]].size();k++){
+					edgenum[v[temp[j]][k]]--;
+				}
+			}else{
+				ans.push_back(i);
+				break;
+			}
+		}
+		for(int j=1;j<n+1;j++)
+			edgenum[j] = tempedge[j];
+		temp.clear();
 	}
-	return 0;
+	for(int i=0;i<ans.size();i++){
+		printf("%d",ans[i]);
+		if(i!=ans.size()-1) printf(" ");
+	}
+    return 0;
 }
