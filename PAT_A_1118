@@ -1,89 +1,61 @@
 #include<iostream>
-#include<string>
 #include<algorithm>
-#include<map>
-#include<stack>
+#include<set>
 using namespace std;
-int fa[10004];
-int res[10004];
-map<int, bool> amap;
-int findfather(int a) {
+//1118   15:38
+int n,id,query,num,cnt = 0,first,second,father[10002];
+bool exist[10002];
+int findfather(int a){
 	int x = a;
-	while (a != fa[a]) {
-		a = fa[a];
-	}
-	while (x != fa[x]) {
-		int y = x;
-		x = fa[x];
-		fa[y] = a;
+	while(a!=father[a])
+		a = father[a];
+	while(x!=father[x]){
+		int z = father[x];
+		father[x] = a;
+		x = z;
 	}
 	return a;
 }
-void Union(int a,int b) {
-	int faa = findfather(a);
-	int fbb = findfather(b);
-	if (faa != fbb) {
-		fa[faa] = fbb;
-	}
+void Union(int a,int b){
+	int aa = findfather(a);
+	int bb = findfather(b);
+	if(aa!=bb)
+		father[aa] = bb;
 }
-
-int main() {
-	int n = 0;
-	cin >> n;
-	for (int i = 1; i < 10004; i++) {
-		fa[i] = i;
-	}
-	for (int i = 0; i < n; i++) {
-		int m = 0,num = 0,id = 0;
-		cin >> m;
-		cin >> id;
-		amap[id] = true;
-		for (int j = 0; j < m-1; j++) {
-			cin >> num;
-			Union(id, num);
-			amap[num] = true;
+int main(){
+	scanf("%d",&n);
+	set<int> tree;
+	for(int i=0;i<10002;i++)
+		father[i] = i;
+	for(int i=0;i<n;i++){
+		scanf("%d",&num);
+		if(num!=0){
+			scanf("%d",&first);
+			exist[first] = true;
+			for(int j=1;j<num;j++){
+				scanf("%d",&id);
+				Union(first,id);
+				exist[id] = true;
+			}
 		}
 	}
-	for (int i = 0; i < 10004; i++) {
-		if (amap[i] == true) {
+	for(int i=0;i<10002;i++){
+		if(exist[i]==true){
+			cnt++;
 			int root = findfather(i);
-			res[root]++;
+			tree.insert(root);
 		}
 	}
-	int numtree = 0, numbird = 0;
-	for (int i = 0; i < 10004; i++) {
-		if (amap[i] == true && res[i] != 0) {
-			numtree++;
-			numbird += res[i];
-		}
+	printf("%d %d\n",tree.size(),cnt);
+	scanf("%d",&query);
+	for(int i=0;i<query;i++){
+		scanf("%d%d",&first,&second);
+		int a = findfather(first);
+		int b = findfather(second);
+		if(a==b)
+			printf("Yes\n");
+		else
+			printf("No\n");
 	}
-	cout << numtree << " " << numbird << endl;
-	int query = 0;
-	cin >> query;
-	for (int i = 0; i < query; i++) {
-		int q = 0, w = 0;
-		cin >> q >> w;
-		int qa = findfather(q);
-		int wa = findfather(w);
-		if (qa == wa) {
-			cout << "Yes" << endl;
-		}
-		else {
-			cout << "No" << endl;
-		}
-	}
-
 	return 0;
 }
-	
-/*
-5
-3 10 1 2
-2 3 4
-4 1 5 7 8
-3 9 6 4
-2 1 4
-2
-10 5
-3 7
-*/
