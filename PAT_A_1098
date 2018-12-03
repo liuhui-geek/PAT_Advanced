@@ -1,0 +1,64 @@
+#include<iostream>
+#include<algorithm>
+#include<set>
+#include<vector>
+using namespace std;
+//1098
+int n,ans[101];
+vector<int> old,now,temp;
+bool cmp(int a,int b){
+	return a<b;
+}
+bool isinsert(){
+	for(int i=1;i<n;i++){
+		sort(temp.begin(),temp.begin()+i+1,cmp);
+		if(temp==now){
+			sort(temp.begin(),temp.begin()+i+2,cmp);
+			return true;
+		}
+	}
+	return false;
+}
+void downAdjust(int low,int high){
+	int i=low,j = i*2;   //i为欲调整节点，j为左孩子
+	while(j<=high){
+		if(j+1<high&&ans[j+1]>ans[j])
+			j = j+1;
+		if(ans[j]>ans[i]){
+			swap(ans[j],ans[i]);
+			i = j;
+			j = 2*i;
+		}else
+			break;
+	}
+}
+int main(){
+	scanf("%d",&n);
+	old.resize(n);
+	now.resize(n);
+	for(int i=0;i<n;i++)
+		scanf("%d",&old[i]);
+	for(int i=0;i<n;i++)
+		scanf("%d",&now[i]);
+	temp = old;
+	if(isinsert()){
+		printf("Insertion Sort\n");
+		printf("%d",temp[0]);
+		for(int i=1;i<n;i++)
+			printf(" %d",temp[i]);
+	}else{
+		printf("Heap Sort\n");
+		for(int i=0;i<n;i++)
+			ans[i+1] = now[i];
+		int m = n;
+		while(m>=2&&ans[m]>=ans[m-1])
+			m--;
+		swap(ans[1],ans[m]);
+		downAdjust(1,m-1);
+		printf("%d",ans[1]);
+		for(int i=2;i<=n;i++)
+			printf(" %d",ans[i]);
+
+	}
+	return 0;
+}
