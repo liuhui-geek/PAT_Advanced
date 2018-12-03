@@ -1,0 +1,76 @@
+#include<iostream>
+#include<algorithm>
+#include<set>
+using namespace std;
+struct node{
+	double sets,area;
+	int id,num;
+}result[10002];
+int n,id,fa,mo,child,num,sets,area,father[10002];
+double setss[10002],areas[10002],nums[10002],temparea[10002],tempset[10002];
+bool exist[10002];
+bool cmp(node a,node b){
+	if(a.area!=b.area)
+		return a.area>b.area;
+	return a.id<b.id;
+}
+int findfather(int a) {
+	int x = a;
+	while (a != father[a]) {
+		a = father[a];
+	}
+	while (x != father[x]) {
+		int y = x;
+		x = father[x];
+		father[y] = a;
+	}
+	return a;
+}
+void Union(int a, int b) {
+	int aa = findfather(a);
+	int bb = findfather(b);
+	if (aa != bb) 
+		aa > bb ? father[aa] = bb : father[bb] = aa;
+}
+int main(){
+	set<int> ans;
+	scanf("%d",&n);
+	for (int i = 0; i < 10002; i++) 
+		father[i] = i;
+	for(int i=0;i<n;i++){
+		scanf("%d%d%d%d",&id,&fa,&mo,&num);
+		exist[fa] = true;    exist[mo]  =true;    exist[id]  =true;
+		if(fa!=-1)
+			Union(id,fa);
+		if(mo!=-1)
+			Union(id,mo);
+		for(int j=0;j<num;j++){
+			scanf("%d",&child);
+			exist[child]  =true;
+			Union(id,child);
+		}
+		scanf("%d%d",&sets,&area);
+		temparea[id] += area;
+		tempset[id] += sets;
+	}
+	for(int i=0;i<10002;i++){
+		if(exist[i]==true){
+			int x = findfather(i);
+			setss[x] += tempset[i];
+			areas[x] += temparea[i];
+			nums[x]++;
+			ans.insert(x);
+		}
+	}
+	for(auto it = ans.begin();it!=ans.end();it++){
+		result[(*it)].num = nums[(*it)];
+		result[(*it)].area = areas[(*it)]/result[(*it)].num;
+		result[(*it)].sets = setss[(*it)]/result[(*it)].num;
+		result[(*it)].id = (*it);
+	}
+	sort(result,result+10000,cmp);
+	printf("%d\n",ans.size());
+	for(int i=0;i<ans.size();i++)
+		printf("%04d %d %.3f %.3f\n",result[i].id,result[i].num,result[i].sets,result[i].area);
+	return 0;
+}
