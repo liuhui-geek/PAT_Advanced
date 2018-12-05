@@ -1,0 +1,78 @@
+
+#include <iostream>
+#include<algorithm>
+#include<map>
+#include<vector>
+using namespace std;
+//1111
+vector<vector<int>> arc(10000);
+map<int, int> line;
+vector<int> temppath, anspath;
+bool exist[10000] = { false };
+int n, m, num, last, start, dest,minpath = 1000000,mintransfer = 1000000;
+int transfer(vector<int> a) {
+	int lines = 0,cnt = 0;
+	for (int i = 1; i < a.size(); i++) {
+		if (line[a[i-1] * 10000 + a[i]] != lines)
+			cnt++;
+		lines = line[a[i - 1] * 10000 + a[i]];
+	}
+	return cnt;
+}
+void dfs(int root,int path) {
+	if (root == dest) {
+		if (path < minpath||(path==minpath&&transfer(temppath)<mintransfer)) {
+			minpath = path;
+			mintransfer = transfer(temppath);
+			anspath = temppath;
+		}
+		return;
+	}
+	for (int i = 0; i < arc[root].size(); i++) {
+		if (exist[arc[root][i]] == false) {
+			exist[arc[root][i]] = true;
+			temppath.push_back(arc[root][i]);
+			dfs(arc[root][i], path + 1);
+			exist[arc[root][i]] = false;
+			temppath.pop_back();
+		}
+			
+	}
+}
+int main() {
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++) {
+		scanf("%d%d", &m,&last);
+		for (int j = 1; j < m; j++) {
+			scanf("%d", &num);
+			arc[last].push_back(num);
+			arc[num].push_back(last);
+			line[last * 10000 + num] = line[num*10000+last] = i;
+			last = num;
+		}
+	}
+	scanf("%d", &m);
+	for (int i = 0; i < m; i++) {
+		scanf("%d%d", &start, &dest);
+		fill(exist, exist + 10000, false);
+		minpath = 1000000;   mintransfer = 1000000;
+		temppath.clear();
+		temppath.push_back(start);
+		exist[start] = true;
+		dfs(start, 0);
+		//输出结果
+		printf("%d\n", minpath);
+		int preline = 0, pretransfer = start;
+		for (int j = 1; j < anspath.size(); j++) {
+			if (line[anspath[j - 1] * 10000 + anspath[j]] != preline) {
+				if (preline != 0)
+					printf("Take Line#%d from %04d to %04d.\n", preline,pretransfer,anspath[j-1]);
+				preline = line[anspath[j - 1] * 10000 + anspath[j]];
+				pretransfer = anspath[j - 1];
+			}
+		}
+		printf("Take Line#%d from %04d to %04d.\n", preline, pretransfer, dest);
+		
+	}
+	return 0;
+}
