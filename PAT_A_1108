@@ -1,82 +1,53 @@
 #include<iostream>
-#include<math.h>
-#include<sstream>
-#include<vector>
 #include<string>
-#include<algorithm>
-#include<iomanip>
 using namespace std;
-int main() {
-	int n;
-	cin >> n;
-	string input,a;
-	int error = 0;
-	double average = 0;
-	for (int i = 0; i < n; i++) {
-		bool negative = true;
-		bool dot = false;
-		bool dotstart = false;
-		bool err = false;
-		int dotafter = 0;
-		double sum = 0;
-		
-		cin >> input;
-		a = input;
-		int length = input.length();
-		if (input[0] == '-') {
-			negative = true;
-			input = input.substr(1, length - 1);
-			length--;
-		}
 
-		for (int i = 0; i < length; i++) {
-			if (dotstart == true && isdigit(input[i])) {
-				dotafter++;
-				if (dotafter >= 3) {
-					cout << "ERROR: " << a << " is not a legal number" << endl;
-					error++;
-					err = true;
-					break;
-				}
+int main() {
+	int n, m, dot = 0, loc = 0;
+	double sum = 0;
+	bool flag = true;
+	string a;
+	scanf("%d", &n);
+	m = n;
+	for (int i = 0; i < n; i++) {
+		cin >> a;
+		dot = 0, loc = 0;
+		flag = true;
+		for (int i = 0; i < a.length(); i++) {
+			if (isalpha(a[i]))
+				flag = false;
+			if (a[i] == '.'&&dot==0) {
+				dot++;
+				loc = i;
 			}
-			if (!isdigit(input[i])) {
-				if (input[i] == '.') {
-					if (dot == false) {
-						dotstart = true;
-					}
-					else {
-						cout << "ERROR: " << a << " is not a legal number" << endl;
-						error++;
-						err = true;
-						break;
-					}
-					dot = true;
-				}
-				else {
-					cout << "ERROR: " << a << " is not a legal number" << endl;
-					error++;
-					err = true;
-					break;
-				}
+			else if (a[i] == '.'&&dot != 0)
+				flag = false;
+		}
+		if (a.length() - loc > 3 && loc != 0)
+			flag = false;
+		if (flag == false) {
+			cout << "ERROR: " << a << " is not a legal number"<<endl;
+			m--;
+		}
+		else {
+			double b = stod(a);
+			if (b < -1000 || b>1000)
+				flag = false;
+			if (flag == false) {
+				cout << "ERROR: " << a << " is not a legal number"<<endl;
+				m--;
 			}
-		}
-		stringstream ss;
-		ss << a;
-		ss >> sum;
-		if (sum < -1000 || sum>1000) {
-			cout << "ERROR: " << a << " is not a legal number" << endl;
-			error++;
-		}
-		else if(err == false){
-			average += sum;
+			else
+				sum += b;
 		}
 	}
-	if (n-error==1) {
-		cout << "The average of 1 number is " << fixed << setprecision(2)<< average;
-	}else if (error == n) {
-		cout<< "The average of 0 numbers is Undefined";
-	}else {
-		cout << "The average of " << n - error << " numbers is " <<fixed<<setprecision(2)<< average / (n - error);
+	if (m == 0)
+		cout << "The average of 0 numbers is Undefined";
+	else if (m == 1)
+		printf("The average of 1 number is %.2f",sum);
+	else {
+		double avg = sum / m;
+		printf("The average of %d numbers is %.2f", m, avg);
 	}
 	return 0;
 }
