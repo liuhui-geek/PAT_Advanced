@@ -1,0 +1,34 @@
+#include <iostream>
+#include<string>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+//1019
+int main() {
+	int n, base, cnt = 0, flag = 0;;
+	int ans[200];
+	scanf("%d%d", &n, &base);
+	while (n != 0) {
+	    int temp = n % base;
+		n = n / base;
+		ans[cnt++] = temp;
+	}
+	for (int i = 0; i < cnt / 2; i++) {
+		if (ans[i] != ans[cnt - i-1]) {
+			cout << "No" << endl;
+			flag = 1;
+			break;
+		}
+	}
+	if (flag!=1) {
+		cout << "Yes" << endl;
+	}
+	for (int i = cnt-1; i >=0 ; i--) {
+		if (i != cnt-1)
+			cout << " ";
+		cout << ans[i];
+	}
+	if (cnt == 0)
+		cout << "0";
+	return 0;
+}
