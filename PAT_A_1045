@@ -1,0 +1,35 @@
+
+#include <iostream>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<algorithm>
+using namespace std;
+//1045
+int main() {
+	int n,m,num,color[202],dp[10001],maxans = 0,temp[10001],cnt = 0;
+	fill(color, color + 202, -1);
+	scanf("%d%d", &n,&m);
+	for (int i = 1; i <= m; i++) {
+		scanf("%d", &num);
+		color[num] = i;
+	}
+	scanf("%d", &m);
+	for (int i = 0; i < m; i++) {
+		scanf("%d", &num);
+		if (color[num] != -1) {
+			temp[cnt++] = color[num];
+		}
+	}
+	for (int i = 0; i < cnt; i++) {
+		dp[i] = 1;
+		for (int j = 0; j < i; j++) {
+			if (temp[j] <= temp[i]) {
+				dp[i] = max(dp[i], dp[j]+1);
+			}
+		}
+		maxans = max(maxans, dp[i]);
+	}
+	cout << maxans;
+	return 0;
+}
