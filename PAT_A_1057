@@ -1,0 +1,64 @@
+#include <iostream>
+#include <stack>
+#include<string>
+#include <algorithm>
+using namespace std;
+//1057 分块思想
+const int sqrn = 316;
+const int maxn = 100002;
+int n, num, block[sqrn],table[maxn];
+stack<int> s;
+void push(int num) {
+	s.push(num);
+	block[num / sqrn]++;
+	table[num]++;
+}
+void pop() {
+	int top = s.top();
+	s.pop();
+	block[top / sqrn]--;
+	table[top]--;
+	printf("%d\n", top);
+}
+void PeekMedian(int k) {
+	int bb = 0,total = 0;
+	while (total + block[bb] < k) {
+		total += block[bb++];
+	}
+	int num = bb*sqrn;
+	while (total+ table[num]<k){
+		total += table[num++];
+	}
+	printf("%d\n", num);
+}
+int main() {
+	
+	fill(block, block + sqrn, 0);
+	fill(table, table + sqrn, 0);
+	cin >> n;
+	string a;
+	for (int i = 0; i < n; i++) {
+		cin >> a;
+		if (a[1] == 'u') {
+			cin >> num;
+			push(num);
+		}
+		else if (a[1] == 'o') {
+			if (!s.empty())
+				pop();
+			else
+				printf("Invalid\n");
+		}
+		else {
+			if (!s.empty()) {
+				int k = s.size();
+				if (k % 2 == 1) k = (k + 1) / 2;
+				else k = k / 2;
+				PeekMedian(k);
+			}
+			else
+				printf("Invalid\n");
+		}
+	}
+	return 0;
+}
