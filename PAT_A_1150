@@ -1,0 +1,83 @@
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+int arc[202][202];
+bool visit[202];
+int main() {
+	int n = 0, m = 0;
+	cin >> n >> m;
+	for (int i = 0; i < m; i++) {
+		int a = 0, b = 0, path = 0;
+		cin >> a >> b >> path;
+		arc[a][b] = path;
+		arc[b][a] = path;
+	}
+	int num = 0;
+	cin >> num;
+	int shortpath = 1000000;
+	int index = 0;
+	for (int i = 0; i < num; i++) {
+		int query = 0,last = 0,temp = 0,finally = 0,a = 0;
+		int temppath = 0;
+		bool flag = false,cycle = true,repeat = false,no = false;
+		fill(visit, visit + 201, false);
+		cin >> query >> a;
+		last = a;
+		temp = a;
+		visit[a] = true;
+		for (int j = 1; j < query-1; j++) {
+			cin >> a;
+			if (arc[a][temp] == 0) {
+				flag = true;         //判断是否是一个圈，路径无限大
+			}else if(visit[a]==true){
+				repeat = true;
+				temppath += arc[a][temp];
+			}
+			else {
+				temppath += arc[a][temp];
+			}
+			visit[a] = true;
+			temp = a;
+		}
+		cin >> a;
+		visit[a] = true;
+		if (a != last&&arc[a][temp] != 0) {
+			cycle = false;            //不是一个圈
+			temppath += arc[a][temp];
+		}
+		else if(a==last&&arc[a][temp] != 0){
+			temppath += arc[a][temp];
+		}
+		else {
+			flag = true;         //判断是否是一个圈，路径无限大
+		}
+		
+		for(int j = 1; j <= n; j++) {
+			if (visit[j] == false) {
+				no = true;
+			}
+		}
+		if (flag == true) {
+			cout << "Path " << i + 1 << ": NA (Not a TS cycle)"<<endl;
+		}
+		else if (cycle==false||no==true) {
+			cout << "Path " << i + 1<<": " << temppath << " (Not a TS cycle)" << endl;
+		}
+		else if (repeat==true) {
+			cout << "Path " << i + 1 << ": " << temppath << " (TS cycle)" << endl;
+		}
+		else {
+			cout << "Path " << i + 1 << ": "<<temppath<<" (TS simple cycle)" << endl;
+		}
+		if (temppath < shortpath&&flag == false&&cycle==true&& no==false) {
+			shortpath = temppath;
+			index = i + 1;
+		}
+
+	}
+	cout << "Shortest Dist(" << index << ") = " << shortpath;
+
+
+	return 0;
+}
