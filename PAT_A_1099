@@ -1,0 +1,42 @@
+#include<iostream>
+#include<queue>
+#include<algorithm>
+using namespace std;
+struct node{
+	int data,left,right;
+}tree[101];
+int n,num[101],index = 0,temp = 0;
+void inorder(int root){
+	if(root==-1)
+		return;
+	inorder(tree[root].left);
+	tree[root].data = num[index++];
+	inorder(tree[root].right);
+}
+void bfs(int root){
+	queue<int> q;
+	q.push(root);
+	while(!q.empty()){
+		int front = q.front();
+		q.pop();
+		printf("%d",tree[front].data);
+		temp++;
+		if(temp<n) printf(" ");
+		if(tree[front].left!=-1)
+			q.push(tree[front].left);
+		if(tree[front].right!=-1)
+			q.push(tree[front].right);
+	}
+}
+int main(){
+	scanf("%d",&n);
+	int left,right,root;
+	for(int i=0;i<n;i++)
+		scanf("%d%d",&tree[i].left,&tree[i].right);
+	for(int i=0;i<n;i++)
+		scanf("%d",&num[i]);
+	sort(num,num+n);
+	inorder(0);
+	bfs(0);
+	return 0;
+}
