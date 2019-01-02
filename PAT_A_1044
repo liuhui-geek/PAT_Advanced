@@ -1,0 +1,40 @@
+#include <cstdio>
+#include <cstring>
+#include <string>
+ 
+using namespace std;
+ 
+int sum[100005];
+int main() {
+int n,m;
+    scanf("%d%d",&n,&m);
+    int j = 0, may = 2000000000;
+    bool have = false;
+    for (int i = 1; i <= n; ++i) {
+        int x;
+        scanf("%d",&x);
+        sum[i] = sum[i - 1] + x;
+        for (; sum[i] - sum[j] > m; ++j)
+        ;
+        if (sum[i] - sum[j] == m) {
+            printf("%d-%d\n", j + 1, i);
+            have = true;
+        }
+        if ((j) && (sum[i] - sum[j - 1] > m)) {
+            may = min(may, sum[i] - sum[j - 1]);
+        }
+         
+    }
+    if (!have) {
+        m = may;
+        j = 0;
+        for (int i = 1; i <= n; ++i) {
+            for (;sum[i] - sum[j] > m; ++j)
+            ;
+            if (sum[i] - sum[j] == m) {
+                printf("%d-%d\n", j + 1, i);
+            }
+        }
+    }
+    return 0;
+} 
